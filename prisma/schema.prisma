@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("admins")
+}
+
+model Patient {
+  id         Int       @id @default(autoincrement())
+  username   String    @unique
+  password   String
+  name       String
+  phone      String?
+  bookings   Booking[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("patients")
+}
+
+model Doctor {
+  id             Int        @id @default(autoincrement())
+  name           String
+  specialization String
+  schedules      Schedule[]
+  created_at     DateTime   @default(now())
+  updated_at     DateTime   @updatedAt
+
+  @@map("doctors")
+}
+
+model Schedule {
+  id         Int       @id @default(autoincrement())
+  doctor_id  Int
+  doctor     Doctor    @relation(fields: [doctor_id], references: [id])
+  day        String
+  start_time String
+  end_time   String
+  quota      Int
+  bookings   Booking[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("schedules")
+}
+
+model Booking {
+  id           Int      @id @default(autoincrement())
+  patient_id   Int
+  patient      Patient  @relation(fields: [patient_id], references: [id])
+  schedule_id  Int
+  schedule     Schedule @relation(fields: [schedule_id], references: [id])
+  visit_date   DateTime @db.Date
+  time_slot    String
+  complaint    String   @db.Text
+  booking_code String   @unique
+  queue_number Int
+  status       String   @default("Confirmed")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@unique([patient_id, visit_date])
+  @@map("bookings")
+}
