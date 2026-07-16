@@ -29,9 +29,15 @@ app.use(
   })
 );
 
+const authRoutes = require('./src/routes/auth.routes');
+const { requirePatientAuth } = require('./src/middlewares/authMiddleware');
+
+// Routes
+app.use('/auth', authRoutes);
+
 // Basic Route for testing
-app.get('/', (req, res) => {
-  res.send('Sistem Booking Klinik is running.');
+app.get('/', requirePatientAuth, (req, res) => {
+  res.send('Sistem Booking Klinik is running. You are logged in!');
 });
 
 // Start Server
