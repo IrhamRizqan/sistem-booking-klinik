@@ -28,12 +28,14 @@ app.use(
 const authRoutes = require('./src/routes/auth.routes');
 const doctorRoutes = require('./src/routes/doctor.routes');
 const scheduleRoutes = require('./src/routes/schedule.routes');
+const bookingRoutes = require('./src/routes/booking.routes');
 const { requirePatientAuth, requireAdminAuth } = require('./src/middlewares/authMiddleware');
 
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/doctors', requireAdminAuth, doctorRoutes);
 app.use('/api/schedules', requireAdminAuth, scheduleRoutes);
+app.use('/api/bookings', requirePatientAuth, bookingRoutes);
 
 // Static HTML Fallback Routing
 // If a user goes to /auth/login, serve public/pages/auth/login.html
