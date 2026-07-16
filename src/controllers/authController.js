@@ -1,68 +1,48 @@
 const authService = require('../services/authService');
 
-const getLogin = (req, res) => {
-  res.render('auth/login', { error: null });
-};
-
 const postLogin = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.render('auth/login', { error: 'Username and password are required' });
+    return res.status(400).json({ success: false, message: 'Username and password are required' });
   }
 
   try {
     const patient = await authService.loginPatient(username, password);
     req.session.patientId = patient.id;
-    res.redirect('/');
+    return res.status(200).json({ success: true, message: 'Login successful', data: { id: patient.id, username: patient.username, name: patient.name } });
   } catch (error) {
-    res.render('auth/login', { error: error.message });
+    return res.status(400).json({ success: false, message: error.message });
   }
-};
-
-const getRegister = (req, res) => {
-  res.render('auth/register', { error: null, formData: {} });
 };
 
 const postRegister = async (req, res) => {
   const { name, phone, username, password, confirmPassword } = req.body;
 
   if (!name || !username || !password || !confirmPassword) {
-    return res.render('auth/register', { 
-      error: 'All fields except phone are required', 
-      formData: req.body 
-    });
+    return res.status(400).json({ success: false, message: 'All fields except phone are required' });
   }
 
   if (password !== confirmPassword) {
-    return res.render('auth/register', { 
-      error: 'Passwords do not match', 
-      formData: req.body 
-    });
+    return res.status(400).json({ success: false, message: 'Passwords do not match' });
   }
 
   try {
-    await authService.registerPatient({ name, phone, username, password });
-    // Registration successful, redirect to login
-    res.redirect('/auth/login');
+    const patient = await authService.registerPatient({ name, phone, username, password });
+    return res.status(201).json({ success: true, message: 'Registration successful', data: { id: patient.id, username: patient.username } });
   } catch (error) {
-    res.render('auth/register', { 
-      error: error.message, 
-      formData: req.body 
-    });
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
 
 const logout = (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/auth/login');
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
   });
 };
 
 module.exports = {
-  getLogin,
   postLogin,
-  getRegister,
   postRegister,
   logout
 };

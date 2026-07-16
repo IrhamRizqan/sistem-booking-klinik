@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor - Sistem Booking Klinik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <main class="container">
+        <div class="row mb-4 align-items-center mt-4">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-primary mb-0">Edit Doctor</h2>
+            </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <a href="/admin/doctors/index" class="btn btn-outline-secondary fw-bold">
+                    <i class="bi bi-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5">
+                        <div id="alert-container"></div>
+                        <form id="editForm">
+                            <div class="mb-4">
+                                <label for="name" class="form-label text-muted fw-semibold">Doctor's Full Name</label>
+                                <input type="text" class="form-control form-control-lg" id="name" required>
+                            </div>
+                            
+                            <div class="mb-5">
+                                <label for="specialization" class="form-label text-muted fw-semibold">Specialization</label>
+                                <input type="text" class="form-control form-control-lg" id="specialization" required>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg fw-bold">Update Doctor</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const doctorId = urlParams.get('id');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!doctorId) {
+                window.showAlert('No doctor ID provided', 'danger');
+                return;
+            }
+
+            try {
+                const res = await window.apiFetch(`/api/doctors/${doctorId}`);
+                if (res.success) {
+                    document.getElementById('name').value = res.data.name;
+                    document.getElementById('specialization').value = res.data.specialization;
+                } else {
+                    window.showAlert(res.message || 'Failed to fetch doctor details', 'danger');
+                }
+            } catch(e) {
+                window.showAlert('Network error fetching doctor data', 'danger');
+            }
+        });
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const specialization = document.getElementById('specialization').value;
+
+            try {
+                const res = await window.apiFetch(`/api/doctors/${doctorId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ name, specialization })
+                });
+
+                if (res.success) {
+                    window.location.href = '/admin/doctors/index'; // Redirect back to list
+                } else {
+                    window.showAlert(res.message, 'danger');
+                }
+            } catch (err) {
+                window.showAlert('A network error occurred. Please try again.', 'danger');
+            }
+        });
+    </script>
+</body>
+</html>

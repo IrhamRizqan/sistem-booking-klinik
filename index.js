@@ -6,10 +6,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Setup View Engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src', 'views'));
-
 // Middleware
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 app.use(express.urlencoded({ extended: true }));
@@ -30,14 +26,41 @@ app.use(
 );
 
 const authRoutes = require('./src/routes/auth.routes');
-const { requirePatientAuth } = require('./src/middlewares/authMiddleware');
+const doctorRoutes = require('./src/routes/doctor.routes');
+const { requirePatientAuth, requireAdminAuth } = require('./src/middlewares/authMiddleware');
 
-// Routes
-app.use('/auth', authRoutes);
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/doctors', requireAdminAuth, doctorRoutes);
 
-// Basic Route for testing
-app.get('/', requirePatientAuth, (req, res) => {
-  res.send('Sistem Booking Klinik is running. You are logged in!');
+// Static HTML Fallback Routing
+// If a user goes to /auth/login, serve public/pages/auth/login.html
+app.get('/:section/:page', (req, res, next) => {
+    // Avoid interfering with /api routes
+    if (req.params.section === 'api') return next();
+
+    const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, `${req.params.page}.html`);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            next();
+        }
+    });
+});
+
+app.get('/:section/:subsection/:page', (req, res, next) => {
+    if (req.params.section === 'api') return next();
+
+    const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, req.params.subsection, `${req.params.page}.html`);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            next();
+        }
+    });
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'public', 'pages', 'index.html'));
 });
 
 // Start Server
