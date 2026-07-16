@@ -40,26 +40,26 @@ app.use('/api/bookings', requirePatientAuth, bookingRoutes);
 // Static HTML Fallback Routing
 // If a user goes to /auth/login, serve public/pages/auth/login.html
 app.get('/:section/:page', (req, res, next) => {
-    // Avoid interfering with /api routes
-    if (req.params.section === 'api') return next();
+  // Avoid interfering with /api routes
+  if (req.params.section === 'api') return next();
 
-    const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, `${req.params.page}.html`);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            next();
-        }
-    });
+  const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, `${req.params.page}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      next();
+    }
+  });
 });
 
 app.get('/:section/:subsection/:page', (req, res, next) => {
-    if (req.params.section === 'api') return next();
+  if (req.params.section === 'api') return next();
 
-    const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, req.params.subsection, `${req.params.page}.html`);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            next();
-        }
-    });
+  const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, req.params.subsection, `${req.params.page}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      next();
+    }
+  });
 });
 
 // Root route
