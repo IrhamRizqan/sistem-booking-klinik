@@ -84,6 +84,8 @@ Desktop.ini
 tmp/
 temp/
 *.tmp
+*.ai
+*skills
 
 # ==========================
 # Package Manager
