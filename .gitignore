@@ -1,0 +1,99 @@
+# ==========================
+# Dependencies
+# ==========================
+node_modules/
+
+# ==========================
+# Environment Variables
+# ==========================
+.env
+.env.*
+!.env.example
+
+# ==========================
+# Logs
+# ==========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================
+# Runtime
+# ==========================
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ==========================
+# Coverage
+# ==========================
+coverage/
+.nyc_output/
+
+# ==========================
+# Build
+# ==========================
+dist/
+build/
+
+# ==========================
+# Cache
+# ==========================
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# ==========================
+# Prisma
+# ==========================
+prisma/dev.db
+prisma/dev.db-journal
+
+# ==========================
+# Uploads (optional)
+# ==========================
+public/uploads/*
+!public/uploads/.gitkeep
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==========================
+# IDE
+# ==========================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+.idea/
+*.iml
+
+# ==========================
+# Temporary Files
+# ==========================
+tmp/
+temp/
+*.tmp
+
+# ==========================
+# Package Manager
+# ==========================
+.pnpm-store/
+.npm/
+
+# ==========================
+# Misc
+# ==========================
+*.bak
+*.swp
+*.swo
