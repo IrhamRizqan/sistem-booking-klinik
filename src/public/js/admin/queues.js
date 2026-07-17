@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterForm = document.getElementById('filterForm');
     const filterDate = document.getElementById('filterDate');
     const filterDoctor = document.getElementById('filterDoctor');
-    const filterSlot = document.getElementById('filterSlot');
     const queueTableBody = document.getElementById('queueTableBody');
 
     // Default to today
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = new URLSearchParams();
         if (filterDate.value) query.append('date', filterDate.value);
         if (filterDoctor.value) query.append('doctor_id', filterDoctor.value);
-        if (filterSlot.value) query.append('time_slot', filterSlot.value);
 
         queueTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading queues...</td></tr>';
 

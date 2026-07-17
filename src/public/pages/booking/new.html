@@ -47,7 +47,7 @@
                                     <p class="mb-0"><strong>Doctor:</strong> <span id="success-doctor"></span></p>
                                 </div>
                             </div>
-                            <a href="/" class="btn btn-primary">Return to Home</a>
+                            <a href="/patient/dashboard" class="btn btn-primary">Kembali ke Dashboard</a>
                         </div>
 
                         <form id="bookingForm">
@@ -92,37 +92,9 @@
                                 </div>
                             </div>
 
-                            <!-- Step 4: Time Slot -->
+                            <!-- Step 4: Summary -->
                             <div id="step-4" class="step-container">
-                                <h4 class="mb-3"><span class="badge bg-primary me-2">4</span>Select Time Slot</h4>
-                                <div id="slots-container" class="d-flex flex-wrap justify-content-center mb-3">
-                                    <p class="text-muted">Loading available slots...</p>
-                                </div>
-                                <input type="hidden" id="selectedScheduleId" required>
-                                <input type="hidden" id="selectedTimeSlot" required>
-                                
-                                <div class="d-flex justify-content-between mt-4">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="goToStep(3)">Back</button>
-                                    <button type="button" class="btn btn-primary btn-lg" id="btnNext4" disabled>Next</button>
-                                </div>
-                            </div>
-
-                            <!-- Step 5: Complaint -->
-                            <div id="step-5" class="step-container">
-                                <h4 class="mb-3"><span class="badge bg-primary me-2">5</span>Patient Complaint</h4>
-                                <div class="mb-3">
-                                    <label for="complaint" class="form-label text-muted fw-semibold">What is your main complaint?</label>
-                                    <textarea class="form-control" id="complaint" rows="4" required placeholder="Describe your symptoms or reason for visit..."></textarea>
-                                </div>
-                                <div class="d-flex justify-content-between mt-4">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="goToStep(4)">Back</button>
-                                    <button type="button" class="btn btn-primary btn-lg" id="btnNext5" disabled>Review Booking</button>
-                                </div>
-                            </div>
-
-                            <!-- Step 6: Summary -->
-                            <div id="step-6" class="step-container">
-                                <h4 class="mb-3"><span class="badge bg-primary me-2">6</span>Booking Summary</h4>
+                                <h4 class="mb-3"><span class="badge bg-primary me-2">4</span>Booking Summary</h4>
                                 
                                 <ul class="list-group mb-4">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -134,24 +106,16 @@
                                         <strong id="summarySpec"></strong>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span class="text-muted">Doctor</span>
+                                        <span class="text-muted">Doctor & Time</span>
                                         <strong id="summaryDoctor"></strong>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span class="text-muted">Time Slot</span>
-                                        <strong id="summaryTime"></strong>
                                     </li>
                                 </ul>
                                 
-                                <div class="card bg-light border-0 mb-4">
-                                    <div class="card-body">
-                                        <h6 class="card-title text-muted mb-2">Complaint</h6>
-                                        <p class="card-text mb-0" id="summaryComplaint"></p>
-                                    </div>
-                                </div>
+                                <input type="hidden" id="selectedScheduleId" required>
+                                <input type="hidden" id="selectedTimeSlot" required>
 
                                 <div class="d-flex justify-content-between mt-4">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="goToStep(5)">Back</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="goToStep(3)">Back</button>
                                     <button type="submit" class="btn btn-success btn-lg fw-bold" id="btnConfirm">Confirm Booking</button>
                                 </div>
                             </div>

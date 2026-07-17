@@ -53,13 +53,27 @@ const postRegister = async (req, res) => {
 
 const logout = (req, res) => {
   req.session.destroy(() => {
-    res.status(200).json({ success: true, message: 'Logged out successfully' });
+    if (req.method === 'GET') {
+      res.redirect('/auth/login');
+    } else {
+      res.status(200).json({ success: true, message: 'Logged out successfully' });
+    }
   });
+};
+
+const getMe = (req, res) => {
+  if (req.session.adminId) {
+    return res.status(200).json({ success: true, role: 'admin' });
+  } else if (req.session.patientId) {
+    return res.status(200).json({ success: true, role: 'patient' });
+  }
+  return res.status(200).json({ success: true, role: 'guest' });
 };
 
 module.exports = {
   postLogin,
   postAdminLogin,
   postRegister,
-  logout
+  logout,
+  getMe
 };

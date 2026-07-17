@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.success) {
-                window.location.href = '/';
+                window.location.href = '/patient/dashboard';
             } else {
                 window.showAlert(res.message, 'danger');
             }

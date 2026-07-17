@@ -36,17 +36,37 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="day" class="form-label text-muted fw-semibold">Day of Week</label>
-                                <select class="form-select form-control-lg" id="day" required>
-                                    <option value="">Select Day</option>
-                                    <option value="Monday">Monday</option>
-                                    <option value="Tuesday">Tuesday</option>
-                                    <option value="Wednesday">Wednesday</option>
-                                    <option value="Thursday">Thursday</option>
-                                    <option value="Friday">Friday</option>
-                                    <option value="Saturday">Saturday</option>
-                                    <option value="Sunday">Sunday</option>
-                                </select>
+                                <label class="form-label text-muted fw-semibold">Days of Week</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Monday" id="dayMon">
+                                        <label class="form-check-label" for="dayMon">Monday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Tuesday" id="dayTue">
+                                        <label class="form-check-label" for="dayTue">Tuesday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Wednesday" id="dayWed">
+                                        <label class="form-check-label" for="dayWed">Wednesday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Thursday" id="dayThu">
+                                        <label class="form-check-label" for="dayThu">Thursday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Friday" id="dayFri">
+                                        <label class="form-check-label" for="dayFri">Friday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Saturday" id="daySat">
+                                        <label class="form-check-label" for="daySat">Saturday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input day-checkbox" type="checkbox" value="Sunday" id="daySun">
+                                        <label class="form-check-label" for="daySun">Sunday</label>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="row mb-4">

@@ -61,6 +61,26 @@ const show = async (req, res) => {
 const store = async (req, res) => {
   const { doctor_id, day, start_time, end_time, quota } = req.body;
   
+  if (Array.isArray(day)) {
+    if (day.length === 0) return res.status(400).json({ success: false, message: 'Please select at least one day' });
+    
+    for (const d of day) {
+      const validationError = validateScheduleInput(doctor_id, d, start_time, end_time, quota);
+      if (validationError) return res.status(400).json({ success: false, message: `Validation failed for ${d}: ${validationError}` });
+    }
+    
+    try {
+      const createdSchedules = [];
+      for (const d of day) {
+        const schedule = await scheduleService.createSchedule({ doctor_id, day: d, start_time, end_time, quota });
+        createdSchedules.push(schedule);
+      }
+      return res.status(201).json({ success: true, message: 'Schedules created successfully', data: createdSchedules });
+    } catch (error) {
+      return res.status(400).json({ success: false, message: 'Failed to create schedules. ' + error.message });
+    }
+  }
+
   const validationError = validateScheduleInput(doctor_id, day, start_time, end_time, quota);
   if (validationError) {
     return res.status(400).json({ success: false, message: validationError });

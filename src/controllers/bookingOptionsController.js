@@ -11,11 +11,11 @@ const getSpecializations = async (req, res) => {
 
 const getDoctors = async (req, res) => {
   try {
-    const { specialization } = req.query;
+    const { specialization, date } = req.query;
     if (!specialization) {
       return res.status(400).json({ success: false, message: 'Specialization is required' });
     }
-    const doctors = await bookingOptionsService.getDoctorsBySpecialization(specialization);
+    const doctors = await bookingOptionsService.getDoctorsBySpecialization(specialization, date);
     return res.status(200).json({ success: true, data: doctors });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

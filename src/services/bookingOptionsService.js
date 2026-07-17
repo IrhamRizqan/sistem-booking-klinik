@@ -18,18 +18,29 @@ const getSpecializations = async () => {
   return doctors.map(d => d.specialization);
 };
 
-const getDoctorsBySpecialization = async (specialization) => {
+const getDoctorsBySpecialization = async (specialization, visit_date) => {
+  let dayOfWeek = null;
+  if (visit_date) {
+    const visitDateStr = visit_date.includes('T') ? visit_date.split('T')[0] : visit_date;
+    const visitDateObj = new Date(`${visitDateStr}T00:00:00.000Z`);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    dayOfWeek = days[visitDateObj.getUTCDay()];
+  }
+
   return prisma.doctor.findMany({
     where: {
       specialization: specialization,
       schedules: {
-        some: {}
+        some: dayOfWeek ? { day: dayOfWeek } : {}
       }
     },
     select: {
       id: true,
       name: true,
-      specialization: true
+      specialization: true,
+      schedules: dayOfWeek ? {
+        where: { day: dayOfWeek }
+      } : false
     }
   });
 };

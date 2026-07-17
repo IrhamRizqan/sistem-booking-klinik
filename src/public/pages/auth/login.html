@@ -12,28 +12,45 @@
 
 <body>
     <div id="header-placeholder"></div>
-    <main class="container">
-        <div class="row justify-content-center section-padding">
-            <div class="col-md-5">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-5">
-                        <h2 class="text-center mb-4 fw-bold text-primary">Selamat Datang Kembali</h2>
-                        <div id="alert-container"></div>
-                        <form id="loginForm">
-                            <div class="mb-3">
-                                <label for="username" class="form-label text-muted fw-semibold">Nama Pengguna (Username)</label>
-                                <input type="text" class="form-control form-control-lg" id="username" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="password" class="form-label text-muted fw-semibold">Kata Sandi</label>
-                                <input type="password" class="form-control form-control-lg" id="password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Masuk</button>
-                        </form>
-                        <div class="text-center mt-4">
-                            <span class="text-muted">Belum punya akun?</span>
-                            <a href="/auth/register" class="text-decoration-none fw-semibold">Daftar di sini</a>
+    <main class="container-fluid p-0">
+        <div class="row g-0" style="min-height: 100vh;">
+            <!-- Left Side (Image/Branding) -->
+            <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center bg-light-blue" style="position: relative; overflow: hidden;">
+                <div style="z-index: 2; max-width: 80%; text-align: center;">
+                    <img src="/images/hero.png" alt="Medical UI" class="img-fluid hero-image mb-4" style="max-height: 300px;">
+                    <h2 class="fw-bold text-dark-blue mb-3">Solusi Kesehatan Terpadu</h2>
+                    <p class="text-muted lead">Akses jadwal dokter dan pantau antrean Anda secara real-time dengan presisi tinggi.</p>
+                </div>
+            </div>
+
+            <!-- Right Side (Form) -->
+            <div class="col-lg-6 d-flex justify-content-center align-items-center">
+                <div class="w-100" style="max-width: 450px; padding: 2rem;">
+                    <div class="text-center mb-5">
+                        <a href="/" class="text-decoration-none">
+                            <h3 class="fw-bold text-primary mb-4"><i class="bi bi-hospital"></i> Sistem Booking Klinik</h3>
+                        </a>
+                        <h2 class="fw-bold text-dark-blue">Selamat Datang Kembali</h2>
+                        <p class="text-muted">Silakan masuk ke akun Anda</p>
+                    </div>
+
+                    <div id="alert-container"></div>
+                    
+                    <form id="loginForm">
+                        <div class="mb-4">
+                            <label for="username" class="form-label text-dark-blue fw-bold">Nama Pengguna (Username)</label>
+                            <input type="text" class="form-control form-control-lg" id="username" placeholder="Masukkan username" required>
                         </div>
+                        <div class="mb-5">
+                            <label for="password" class="form-label text-dark-blue fw-bold">Kata Sandi</label>
+                            <input type="password" class="form-control form-control-lg" id="password" placeholder="Masukkan kata sandi" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">Masuk Sekarang</button>
+                    </form>
+                    
+                    <div class="text-center mt-5">
+                        <span class="text-muted">Belum punya akun?</span>
+                        <a href="/auth/register" class="text-primary text-decoration-none fw-bold ms-1">Daftar di sini</a>
                     </div>
                 </div>
             </div>

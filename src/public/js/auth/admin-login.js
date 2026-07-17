@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.success) {
-                window.location.href = '/admin/doctors';
+                window.location.href = '/admin/dashboard';
             } else {
                 window.showAlert(res.message, 'danger');
             }

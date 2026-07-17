@@ -8,30 +8,45 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <!-- Additional nav items can go here -->
-                <li class="nav-item">
+                <!-- Guest Links -->
+                <li class="nav-item role-guest">
+                    <a class="nav-link" href="/auth/login">Masuk</a>
+                </li>
+                <li class="nav-item role-guest">
+                    <a class="nav-link" href="/auth/register">Daftar</a>
+                </li>
+
+                <!-- Patient Links -->
+                <li class="nav-item role-patient" style="display: none;">
                     <a class="nav-link" href="/patient/dashboard">Dashboard Saya</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-patient" style="display: none;">
                     <a class="nav-link" href="/patient/history">Riwayat Booking</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-patient" style="display: none;">
                     <a class="nav-link text-primary fw-bold" href="/booking/new">Buat Booking</a>
                 </li>
-                <li class="nav-item">
+
+                <!-- Admin Links -->
+                <li class="nav-item role-admin" style="display: none;">
                     <a class="nav-link" href="/admin/dashboard">Admin Dashboard</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-admin" style="display: none;">
                     <a class="nav-link" href="/admin/archive">Arsip Klinik</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-admin" style="display: none;">
                     <a class="nav-link" href="/admin/queues">Kelola Antrean</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-admin" style="display: none;">
                     <a class="nav-link" href="/admin/doctors">Kelola Dokter</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item role-admin" style="display: none;">
                     <a class="nav-link" href="/admin/schedules">Kelola Jadwal</a>
+                </li>
+
+                <!-- Authenticated Links (Both Admin and Patient) -->
+                <li class="nav-item role-auth" style="display: none;">
+                    <a class="nav-link text-danger" href="/api/auth/logout">Keluar</a>
                 </li>
             </ul>
         </div>

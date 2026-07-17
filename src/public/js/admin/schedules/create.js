@@ -20,9 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (createForm) {
         createForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const selectedDays = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => cb.value);
+
+            if (selectedDays.length === 0) {
+                window.showAlert('Please select at least one day.', 'danger');
+                return;
+            }
+
             const payload = {
                 doctor_id: document.getElementById('doctor_id').value,
-                day: document.getElementById('day').value,
+                day: selectedDays,
                 start_time: document.getElementById('start_time').value,
                 end_time: document.getElementById('end_time').value,
                 quota: document.getElementById('quota').value

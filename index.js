@@ -52,9 +52,15 @@ app.get('/:section/:page', (req, res, next) => {
   if (req.params.section === 'api') return next();
 
   const filePath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, `${req.params.page}.html`);
+  const dirIndexPath = path.join(__dirname, 'src', 'public', 'pages', req.params.section, req.params.page, 'index.html');
+  
   res.sendFile(filePath, (err) => {
     if (err) {
-      next();
+      res.sendFile(dirIndexPath, (err2) => {
+        if (err2) {
+          next();
+        }
+      });
     }
   });
 });
@@ -72,6 +78,12 @@ app.get('/:section/:subsection/:page', (req, res, next) => {
 
 // Root route
 app.get('/', (req, res) => {
+  if (req.session.adminId) {
+    return res.redirect('/admin/dashboard');
+  }
+  if (req.session.userId) {
+    return res.redirect('/patient/dashboard');
+  }
   res.sendFile(path.join(__dirname, 'src', 'public', 'pages', 'index.html'));
 });
 

@@ -2,30 +2,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const generateSlots = (startTimeStr, endTimeStr) => {
-  // Parse times, assuming HH:mm format
-  const [startH, startM] = startTimeStr.split(':').map(Number);
-  const [endH, endM] = endTimeStr.split(':').map(Number);
-  
-  const startMinutes = startH * 60 + startM;
-  const endMinutes = endH * 60 + endM;
-  
-  const slots = [];
-  let currentMinutes = startMinutes;
-  
-  // Create 1-hour (60 minutes) intervals
-  while (currentMinutes + 60 <= endMinutes) {
-    const fromH = Math.floor(currentMinutes / 60).toString().padStart(2, '0');
-    const fromM = (currentMinutes % 60).toString().padStart(2, '0');
-    
-    const nextMinutes = currentMinutes + 60;
-    const toH = Math.floor(nextMinutes / 60).toString().padStart(2, '0');
-    const toM = (nextMinutes % 60).toString().padStart(2, '0');
-    
-    slots.push(`${fromH}:${fromM}-${toH}:${toM}`);
-    currentMinutes = nextMinutes;
-  }
-  
-  return slots;
+  // Instead of hourly intervals, just return one slot for the entire schedule duration
+  return [`${startTimeStr}-${endTimeStr}`];
 };
 
 const getAllSchedules = async (page = 1, limit = 10, search = '') => {

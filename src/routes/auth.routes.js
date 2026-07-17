@@ -15,4 +15,7 @@ router.post('/admin-login', authController.postAdminLogin);
 router.post('/logout', authController.logout);
 router.get('/logout', authController.logout); // Optional: keep GET for simple href logouts
 
+// Get current session info
+router.get('/me', authController.getMe);
+
 module.exports = router;

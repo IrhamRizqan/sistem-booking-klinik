@@ -5,10 +5,10 @@ const store = async (req, res) => {
   const patientId = req.session.patientId; // Injected via requirePatientAuth middleware
 
   // 1. Validate required fields
-  if (!schedule_id || !visit_date || !time_slot || !complaint) {
+  if (!schedule_id || !visit_date || !time_slot) {
     return res.status(400).json({
       success: false,
-      message: 'Missing required fields: schedule_id, visit_date, time_slot, complaint'
+      message: 'Missing required fields: schedule_id, visit_date, time_slot'
     });
   }
 

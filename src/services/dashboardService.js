@@ -72,7 +72,7 @@ const getPatientActiveBooking = async (patientId) => {
 
   // If the patient's booking is Confirmed, Calling, or On Treatment, let's find the current active queue for their exact slot
   if (['Confirmed', 'Calling', 'On Treatment'].includes(activeBooking.status)) {
-    const activeQueue = await prisma.booking.findFirst({
+    let activeQueue = await prisma.booking.findFirst({
       where: {
         visit_date: activeBooking.visit_date,
         time_slot: activeBooking.time_slot,
@@ -88,6 +88,25 @@ const getPatientActiveBooking = async (patientId) => {
         status: true
       }
     });
+
+    // If no one is currently calling or on treatment, show the last completed/skipped queue
+    if (!activeQueue) {
+      activeQueue = await prisma.booking.findFirst({
+        where: {
+          visit_date: activeBooking.visit_date,
+          time_slot: activeBooking.time_slot,
+          schedule_id: activeBooking.schedule_id,
+          status: { in: ['Completed', 'Skipped'] }
+        },
+        orderBy: {
+          queue_number: 'desc'
+        },
+        select: {
+          queue_number: true,
+          status: true
+        }
+      });
+    }
 
     if (activeQueue) {
       currentQueueNumber = activeQueue.queue_number;
