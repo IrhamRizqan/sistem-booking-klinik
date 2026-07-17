@@ -16,6 +16,22 @@ const postLogin = async (req, res) => {
   }
 };
 
+const postAdminLogin = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: 'Username and password are required' });
+  }
+
+  try {
+    const admin = await authService.loginAdmin(username, password);
+    req.session.adminId = admin.id;
+    return res.status(200).json({ success: true, message: 'Admin login successful' });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 const postRegister = async (req, res) => {
   const { name, phone, username, password, confirmPassword } = req.body;
 
@@ -43,6 +59,7 @@ const logout = (req, res) => {
 
 module.exports = {
   postLogin,
+  postAdminLogin,
   postRegister,
   logout
 };

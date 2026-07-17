@@ -6,8 +6,9 @@ const requirePatientAuth = (req, res, next) => {
 };
 
 const requireAdminAuth = (req, res, next) => {
-  // Stub for now. Admin auth will be fully implemented in a later phase.
-  // if (!req.session.adminId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+  if (!req.session.adminId) {
+    return res.status(401).json({ success: false, message: 'Unauthorized. Admin access required.' });
+  }
   next();
 };
 

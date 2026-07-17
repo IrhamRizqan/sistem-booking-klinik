@@ -50,7 +50,25 @@ const loginPatient = async (username, password) => {
   return patient;
 };
 
+const loginAdmin = async (username, password) => {
+  const admin = await prisma.admin.findUnique({
+    where: { username }
+  });
+
+  if (!admin) {
+    throw new Error('Invalid username or password');
+  }
+
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) {
+    throw new Error('Invalid username or password');
+  }
+
+  return admin;
+};
+
 module.exports = {
   registerPatient,
-  loginPatient
+  loginPatient,
+  loginAdmin
 };

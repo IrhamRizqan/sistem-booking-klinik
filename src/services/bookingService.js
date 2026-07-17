@@ -12,13 +12,14 @@ const createBooking = async (patientId, data) => {
   const { schedule_id, visit_date, time_slot, complaint } = data;
 
   // 1. Validate visit_date
-  const visitDateObj = new Date(visit_date);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const visitDateStr = visit_date.includes('T') ? visit_date.split('T')[0] : visit_date;
+  const visitDateObj = new Date(`${visitDateStr}T00:00:00.000Z`);
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const today = new Date(`${todayStr}T00:00:00.000Z`);
   
-  const thirtyDaysFromNow = new Date();
-  thirtyDaysFromNow.setDate(today.getDate() + 30);
-  thirtyDaysFromNow.setHours(23, 59, 59, 999);
+  const thirtyDaysFromNow = new Date(today);
+  thirtyDaysFromNow.setUTCDate(today.getUTCDate() + 30);
 
   if (visitDateObj < today) {
     throw new Error('Visit date cannot be in the past');
@@ -44,15 +45,30 @@ const createBooking = async (patientId, data) => {
 
   // 3. Fetch Schedule to get Quota
   const schedule = await prisma.schedule.findUnique({
-    where: { id: parseInt(schedule_id) }
+    where: { id: parseInt(schedule_id) },
+    include: { doctor: true }
   });
 
   if (!schedule) {
     throw new Error('Schedule not found');
   }
 
-  // 4. Validate Quota and Generate Queue Number
-  const currentSlotBookings = await prisma.booking.count({
+  // Rule 6: Visit date must match schedule day
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const visitDayOfWeek = days[visitDateObj.getUTCDay()];
+  if (visitDayOfWeek !== schedule.day) {
+    throw new Error(`Visit date (${visitDayOfWeek}) does not match schedule day (${schedule.day})`);
+  }
+
+  // Rule 5: Time slot must belong to schedule
+  const { generateSlots } = require('./scheduleService');
+  const validSlots = generateSlots(schedule.start_time, schedule.end_time);
+  if (!validSlots.includes(time_slot)) {
+    throw new Error('Invalid time slot for this schedule');
+  }
+
+  // 4. Validate Quota
+  const bookingsForSchedule = await prisma.booking.count({
     where: {
       schedule_id: parseInt(schedule_id),
       visit_date: visitDateObj,
@@ -60,15 +76,25 @@ const createBooking = async (patientId, data) => {
     }
   });
 
-  if (currentSlotBookings >= schedule.quota) {
+  if (bookingsForSchedule >= schedule.quota) {
     throw new Error('The selected time slot is full (Quota reached)');
   }
 
-  const queue_number = currentSlotBookings + 1;
+  // 5. Generate Queue Number (Unique per doctor, visit date, and time slot)
+  const bookingsForDoctor = await prisma.booking.count({
+    where: {
+      schedule: { doctor_id: schedule.doctor_id },
+      visit_date: visitDateObj,
+      time_slot: time_slot
+    }
+  });
+
+  const queue_number = bookingsForDoctor + 1;
+  
+  // 6. Generate Booking Code
   let booking_code;
   let isUnique = false;
 
-  // Ensure unique booking code
   while (!isUnique) {
     booking_code = generateBookingCode();
     const existingCode = await prisma.booking.findUnique({ where: { booking_code } });
@@ -77,7 +103,7 @@ const createBooking = async (patientId, data) => {
     }
   }
 
-  // 5. Create Booking
+  // 7. Create Booking
   const booking = await prisma.booking.create({
     data: {
       patient_id: parseInt(patientId),

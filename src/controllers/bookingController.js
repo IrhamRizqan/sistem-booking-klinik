@@ -1,7 +1,7 @@
 const bookingService = require('../services/bookingService');
 
 const store = async (req, res) => {
-  const { schedule_id, visit_date, time_slot, complaint } = req.body;
+  const { schedule_id, visit_date, time_slot, complaint, doctor_id, specialization } = req.body;
   const patientId = req.session.patientId; // Injected via requirePatientAuth middleware
 
   // 1. Validate required fields

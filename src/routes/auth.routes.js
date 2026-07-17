@@ -8,6 +8,9 @@ router.post('/register', authController.postRegister);
 // Login
 router.post('/login', authController.postLogin);
 
+// Admin Login
+router.post('/admin-login', authController.postAdminLogin);
+
 // Logout
 router.post('/logout', authController.logout);
 router.get('/logout', authController.logout); // Optional: keep GET for simple href logouts
