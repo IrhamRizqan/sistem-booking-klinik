@@ -120,6 +120,53 @@ const createBooking = async (patientId, data) => {
   return booking;
 };
 
+const getHistory = async (patientId, filters, page = 1, limit = 10) => {
+  const where = { patient_id: parseInt(patientId) };
+
+  if (filters.date) {
+    const visitDateStr = filters.date.includes('T') ? filters.date.split('T')[0] : filters.date;
+    where.visit_date = new Date(`${visitDateStr}T00:00:00.000Z`);
+  }
+
+  if (filters.status) {
+    where.status = filters.status;
+  }
+
+  if (filters.doctor_id) {
+    where.schedule = { doctor_id: parseInt(filters.doctor_id) };
+  }
+
+  const offset = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    prisma.booking.findMany({
+      where,
+      include: {
+        schedule: {
+          include: { doctor: { select: { name: true, specialization: true } } }
+        }
+      },
+      orderBy: { visit_date: 'desc' }, // Recent bookings first
+      skip: offset,
+      take: limit
+    }),
+    prisma.booking.count({ where })
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    data,
+    pagination: {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      total,
+      totalPages: totalPages === 0 ? 1 : totalPages
+    }
+  };
+};
+
 module.exports = {
-  createBooking
+  createBooking,
+  getHistory
 };

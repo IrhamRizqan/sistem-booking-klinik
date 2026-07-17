@@ -41,6 +41,29 @@ const store = async (req, res) => {
   }
 };
 
+const history = async (req, res) => {
+  try {
+    const patientId = req.session.patientId;
+    const { page = 1, limit = 10, date, status, doctor_id } = req.query;
+
+    const filters = { date, status, doctor_id };
+    
+    const result = await bookingService.getHistory(patientId, filters, parseInt(page), parseInt(limit));
+    
+    return res.status(200).json({
+      success: true,
+      data: result.data,
+      pagination: result.pagination
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
-  store
+  store,
+  history
 };
