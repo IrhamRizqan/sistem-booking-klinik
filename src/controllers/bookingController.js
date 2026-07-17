@@ -63,7 +63,32 @@ const history = async (req, res) => {
   }
 };
 
+const cancel = async (req, res) => {
+  try {
+    const patientId = req.session.patientId;
+    const { booking_code } = req.body;
+
+    if (!booking_code) {
+      return res.status(400).json({ success: false, message: 'booking_code is required' });
+    }
+
+    const result = await bookingService.cancelBookingByCode(patientId, booking_code);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Booking cancelled successfully',
+      data: result
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   store,
-  history
+  history,
+  cancel
 };

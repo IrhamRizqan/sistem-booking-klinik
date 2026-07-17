@@ -19,32 +19,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const scheduleIdInput = document.getElementById('selectedScheduleId');
     const timeSlotInput = document.getElementById('selectedTimeSlot');
 
-    // Setup Date Constraints
-    const today = new Date();
-    const minDateStr = today.toISOString().split('T')[0];
-    const maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 30);
-    const maxDateStr = maxDate.toISOString().split('T')[0];
-
-    visitDateInput.setAttribute('min', minDateStr);
-    visitDateInput.setAttribute('max', maxDateStr);
+    // Setup Flatpickr for dd/mm/yyyy date picker
+    flatpickr("#visitDate", {
+        dateFormat: "Y-m-d", // submitted value
+        altInput: true,      // visible text input
+        altFormat: "d/m/Y",  // display format: dd/mm/yyyy
+        minDate: "today",
+        maxDate: new Date(new Date().setDate(new Date().getDate() + 30)),
+        onChange: (selectedDates, dateStr, instance) => {
+            btnNext1.disabled = !dateStr;
+            
+            specSelect.innerHTML = '<option value="" selected disabled>Loading...</option>';
+            btnNext2.disabled = true;
+            doctorSelect.innerHTML = '<option value="" selected disabled>Choose Specialization first</option>';
+            btnNext3.disabled = true;
+            scheduleIdInput.value = '';
+            timeSlotInput.value = '';
+        }
+    });
 
     window.goToStep = (step) => {
         document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
         document.getElementById(`step-${step}`).classList.add('active');
     };
-
-    // Step 1 -> 2
-    visitDateInput.addEventListener('change', () => {
-        btnNext1.disabled = !visitDateInput.value;
-        
-        specSelect.innerHTML = '<option value="" selected disabled>Loading...</option>';
-        btnNext2.disabled = true;
-        doctorSelect.innerHTML = '<option value="" selected disabled>Choose Specialization first</option>';
-        btnNext3.disabled = true;
-        scheduleIdInput.value = '';
-        timeSlotInput.value = '';
-    });
 
     btnNext1.addEventListener('click', async () => {
         btnNext1.disabled = true;
@@ -195,4 +192,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Auto-fill from URL parameters if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    const specParam = urlParams.get('specialty');
+    const doctorParam = urlParams.get('doctor');
+    const schedParam = urlParams.get('schedule_id');
+    const slotParam = urlParams.get('time_slot');
+
+    if (dateParam && specParam && doctorParam && schedParam && slotParam) {
+        // Set date input value
+        visitDateInput.value = dateParam;
+        
+        // Update Flatpickr if loaded
+        const fp = visitDateInput._flatpickr;
+        if (fp) {
+            fp.setDate(dateParam, true);
+        }
+        
+        // Pre-fill Specialization
+        specSelect.innerHTML = `<option value="${specParam}" selected>${specParam}</option>`;
+        
+        // Pre-fill Doctor option
+        doctorSelect.innerHTML = `<option value="${doctorParam}" selected data-schedule-id="${schedParam}" data-time-slot="${slotParam}">${doctorParam}</option>`;
+        
+        // Set final values
+        scheduleIdInput.value = schedParam;
+        timeSlotInput.value = slotParam;
+        
+        // Pre-fill Summary Step
+        document.getElementById('summaryDate').textContent = dateParam;
+        document.getElementById('summarySpec').textContent = specParam;
+        document.getElementById('summaryDoctor').textContent = `Memuat nama dokter...`;
+        
+        // Fetch doctor details to show human-readable name in summary
+        window.apiFetch(`/api/booking-options/doctors?specialization=${encodeURIComponent(specParam)}&date=${dateParam}`)
+            .then(res => {
+                if (res.success) {
+                    const docObj = res.data.find(d => d.id == doctorParam);
+                    if (docObj) {
+                        const displayText = `${docObj.name} (${slotParam})`;
+                        document.getElementById('summaryDoctor').textContent = displayText;
+                        
+                        // Update select element option text
+                        doctorSelect.innerHTML = '';
+                        const opt = document.createElement('option');
+                        opt.value = docObj.id;
+                        opt.dataset.scheduleId = schedParam;
+                        opt.dataset.timeSlot = slotParam;
+                        opt.textContent = displayText;
+                        opt.selected = true;
+                        doctorSelect.appendChild(opt);
+                    } else {
+                        document.getElementById('summaryDoctor').textContent = `Dokter (${slotParam})`;
+                    }
+                }
+            }).catch(() => {
+                document.getElementById('summaryDoctor').textContent = `Dokter (${slotParam})`;
+            });
+
+        goToStep(4);
+    }
 });

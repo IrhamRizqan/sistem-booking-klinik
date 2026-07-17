@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const limit = 10;
 
+    // Setup Flatpickr for filterDate (dd/mm/yyyy format)
+    const fp = flatpickr("#filterDate", {
+        dateFormat: "Y-m-d", // submitted value
+        altInput: true,      // visible text input
+        altFormat: "d/m/Y",  // display format: dd/mm/yyyy
+    });
+
     const loadDoctors = async () => {
         try {
             const res = await window.apiFetch('/api/doctors?limit=100');
@@ -128,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnReset.addEventListener('click', () => {
         filterSearch.value = '';
-        filterDate.value = '';
+        fp.clear();
         filterDoctor.value = '';
         filterStatus.value = '';
         currentPage = 1;

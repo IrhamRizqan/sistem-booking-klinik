@@ -1,10 +1,5 @@
 let currentDeleteId = null;
-let deleteModalInstance = null;
-let slotsModalInstance = null;
-
 document.addEventListener('DOMContentLoaded', () => {
-    deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
-    slotsModalInstance = new bootstrap.Modal(document.getElementById('slotsModal'));
     
     loadSchedules();
     
@@ -14,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('confirmDeleteBtn').addEventListener('click', deleteSchedule);
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+        document.getElementById('deleteModal').close();
+    });
+    document.getElementById('closeSlotsBtn').addEventListener('click', () => {
+        document.getElementById('slotsModal').close();
+    });
 });
 
 async function loadSchedules(page = 1) {
@@ -34,29 +35,29 @@ function renderTable(schedules) {
     tbody.innerHTML = '';
     
     if (schedules.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted"><i class="bi bi-calendar-x fs-1 d-block mb-3"></i>No schedules found matching your criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:var(--space-xl); color:var(--color-muted);">Tidak ada jadwal yang ditemukan.</td></tr>`;
         return;
     }
 
     schedules.forEach(schedule => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td class="fw-semibold">
+            <td style="font-weight: var(--weight-medium);">
                 ${escapeHtml(schedule.doctor.name)}
-                <div class="small text-muted">${escapeHtml(schedule.doctor.specialization)}</div>
+                <div style="font-size: var(--text-xs); color: var(--color-muted);">${escapeHtml(schedule.doctor.specialization)}</div>
             </td>
-            <td><span class="badge bg-primary text-white rounded-pill px-3 py-2">${escapeHtml(schedule.day)}</span></td>
+            <td><span class="badge badge--success">${escapeHtml(schedule.day)}</span></td>
             <td>
-                <div class="fw-bold text-dark">${schedule.start_time} - ${schedule.end_time}</div>
-                <button class="btn btn-sm btn-link text-decoration-none p-0 mt-1" onclick="viewSlots('${encodeURIComponent(JSON.stringify(schedule.slots))}')">
-                    <i class="bi bi-list-ul"></i> View ${schedule.slots.length} Slots
+                <div style="font-weight: var(--weight-semi);">${schedule.start_time} - ${schedule.end_time}</div>
+                <button class="btn btn--ghost btn--sm" style="margin-top:var(--space-xs); padding:0;" onclick="viewSlots('${encodeURIComponent(JSON.stringify(schedule.slots))}')">
+                    Lihat ${schedule.slots.length} Slot
                 </button>
             </td>
-            <td><span class="badge bg-secondary rounded-pill">${schedule.quota}</span></td>
-            <td><span class="badge bg-success rounded-pill px-3 py-2">${schedule.status}</span></td>
-            <td class="text-end">
-                <a href="/admin/schedules/edit?id=${schedule.id}" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil-fill"></i> Edit</a>
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${schedule.id}, '${escapeHtml(schedule.doctor.name)}')"><i class="bi bi-trash-fill"></i> Delete</button>
+            <td><span class="badge badge--muted">${schedule.quota}</span></td>
+            <td><span class="badge badge--primary">${schedule.status}</span></td>
+            <td style="text-align: right;">
+                <a href="/admin/schedules/edit?id=${schedule.id}" class="btn btn--outline btn--sm" style="margin-right:var(--space-xs);">Edit</a>
+                <button type="button" class="btn btn--danger btn--sm" onclick="confirmDelete(${schedule.id}, '${escapeHtml(schedule.doctor.name)}')">Hapus</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -100,8 +101,8 @@ window.viewSlots = function(encodedSlots) {
     try {
         const slots = JSON.parse(decodeURIComponent(encodedSlots));
         const container = document.getElementById('slotsListContainer');
-        container.innerHTML = slots.map(slot => `<div class="p-2 border-bottom text-center fw-semibold font-monospace">${slot}</div>`).join('');
-        slotsModalInstance.show();
+        container.innerHTML = slots.map(slot => `<div style="padding:var(--space-sm); border-bottom:var(--rule-hair) solid var(--color-rule); text-align:center; font-family:var(--font-mono);">${slot}</div>`).join('');
+        document.getElementById('slotsModal').showModal();
     } catch(e) {
         console.error("Failed to parse slots", e);
     }
@@ -110,19 +111,19 @@ window.viewSlots = function(encodedSlots) {
 window.confirmDelete = function(id, name) {
     currentDeleteId = id;
     document.getElementById('deleteDoctorName').textContent = name;
-    deleteModalInstance.show();
+    document.getElementById('deleteModal').showModal();
 }
 
 async function deleteSchedule() {
     if (!currentDeleteId) return;
     const res = await window.apiFetch(`/api/schedules/${currentDeleteId}`, { method: 'DELETE' });
     if (res.success) {
-        deleteModalInstance.hide();
-        window.showAlert('Schedule deleted successfully', 'success');
+        document.getElementById('deleteModal').close();
+        window.showAlert('Jadwal berhasil dihapus', 'success');
         loadSchedules();
     } else {
-        deleteModalInstance.hide();
-        window.showAlert(res.message || 'Failed to delete schedule', 'danger');
+        document.getElementById('deleteModal').close();
+        window.showAlert(res.message || 'Gagal menghapus jadwal', 'danger');
     }
 }
 

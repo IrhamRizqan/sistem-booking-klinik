@@ -1,8 +1,5 @@
 let currentDeleteId = null;
-let deleteModalInstance = null;
-
 document.addEventListener('DOMContentLoaded', () => {
-    deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
     loadDoctors();
     
     document.getElementById('filterForm').addEventListener('submit', (e) => {
@@ -11,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('confirmDeleteBtn').addEventListener('click', deleteDoctor);
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+        document.getElementById('deleteModal').close();
+    });
 });
 
 async function loadDoctors(page = 1) {
@@ -33,18 +33,18 @@ function renderTable(doctors) {
     tbody.innerHTML = '';
     
     if (doctors.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-3"></i>No doctors found matching your criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:var(--space-xl); color:var(--color-muted);">Tidak ada dokter yang ditemukan.</td></tr>`;
         return;
     }
 
     doctors.forEach(doctor => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td class="fw-semibold">${escapeHtml(doctor.name)}</td>
-            <td><span class="badge bg-secondary rounded-pill px-3 py-2">${escapeHtml(doctor.specialization)}</span></td>
-            <td class="text-end">
-                <a href="/admin/doctors/edit?id=${doctor.id}" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil-fill"></i> Edit</a>
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${doctor.id}, '${escapeHtml(doctor.name)}')"><i class="bi bi-trash-fill"></i> Delete</button>
+            <td style="font-weight: var(--weight-medium);">${escapeHtml(doctor.name)}</td>
+            <td><span class="badge badge--muted">${escapeHtml(doctor.specialization)}</span></td>
+            <td style="text-align: right;">
+                <a href="/admin/doctors/edit?id=${doctor.id}" class="btn btn--outline btn--sm" style="margin-right:var(--space-xs);">Edit</a>
+                <button type="button" class="btn btn--danger btn--sm" onclick="confirmDelete(${doctor.id}, '${escapeHtml(doctor.name)}')">Hapus</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -98,23 +98,22 @@ function renderPagination(pagination, search, spec) {
     `;
 }
 
-// Ensure the modal can trigger this global function (needs to be attached to window if loaded as module, but it's a standard script)
 window.confirmDelete = function(id, name) {
     currentDeleteId = id;
     document.getElementById('deleteDoctorName').textContent = name;
-    deleteModalInstance.show();
+    document.getElementById('deleteModal').showModal();
 }
 
 async function deleteDoctor() {
     if (!currentDeleteId) return;
     const res = await window.apiFetch(`/api/doctors/${currentDeleteId}`, { method: 'DELETE' });
     if (res.success) {
-        deleteModalInstance.hide();
-        window.showAlert('Doctor deleted successfully', 'success');
+        document.getElementById('deleteModal').close();
+        window.showAlert('Dokter berhasil dihapus', 'success');
         loadDoctors();
     } else {
-        deleteModalInstance.hide();
-        window.showAlert(res.message || 'Failed to delete doctor', 'danger');
+        document.getElementById('deleteModal').close();
+        window.showAlert(res.message || 'Gagal menghapus dokter', 'danger');
     }
 }
 

@@ -1,98 +1,306 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Booking Klinik</title>
+  <title>Klinik Bunda — Layanan Kesehatan Terbaik & Terpercaya</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
-<body>
+
+<body class="home-theme">
+  <!-- Dynamic Header Injection -->
   <div id="header-placeholder"></div>
 
   <main>
-    <!-- Hero -->
-    <section class="hero">
+    <!-- Hero Slider -->
+    <section class="home-hero">
       <div class="container">
-        <div class="hero__figure" aria-hidden="true">12.400+</div>
-        <h1 class="hero__headline">Antrean klinik, tanpa harus menunggu.</h1>
-        <p class="hero__sub">Pesan jadwal kunjungan, pantau nomor antrean secara real-time, dan nikmati layanan kesehatan yang lebih teratur.</p>
-        <div class="hero__actions">
-          <a href="/auth/register" class="btn btn--primary btn--lg">Buat Akun</a>
-          <a href="/auth/login" class="btn btn--outline btn--lg">Masuk</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="section">
-      <div class="container">
-        <p class="section__label">Cara Kerja</p>
-        <h2 class="section__title">Tiga langkah sederhana</h2>
-        <p class="section__desc">Dari pendaftaran hingga kunjungan, seluruh proses dirancang agar cepat dan jelas bagi pasien maupun staf klinik.</p>
-
-        <ol class="steps">
-          <li class="steps__item">
-            <div>
-              <h3 class="steps__title">Buat akun dan pilih dokter</h3>
-              <p class="steps__text">Daftar dengan data dasar Anda, lalu pilih dokter spesialis yang tersedia sesuai kebutuhan.</p>
+        <div class="home-carousel">
+          <div class="home-carousel__track" id="carouselTrack">
+            <!-- Slide 1 -->
+            <div class="home-carousel__slide"
+              style="background: linear-gradient(oklch(25% 0.02 160 / 0.8), oklch(48% 0.05 160 / 0.6)), url('https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2000&auto=format&fit=crop') center/cover;">
+              <div class="home-carousel__overlay">
+                <div class="home-carousel__content">
+                  <h1 class="home-carousel__title">Pelayanan Kesehatan Modern & Terintegrasi</h1>
+                  <p class="home-carousel__desc">Klinik Bunda menyediakan fasilitas kesehatan lengkap dengan sistem
+                    antrean online real-time untuk kenyamanan Anda dan keluarga.</p>
+                  <a href="/auth/register" class="btn btn--primary btn--lg"
+                    style="background-color: white; border-color: white; color: var(--color-accent);">Daftar
+                    Sekarang</a>
+                </div>
+              </div>
             </div>
-          </li>
-          <li class="steps__item">
-            <div>
-              <h3 class="steps__title">Pilih jadwal dan jam kunjungan</h3>
-              <p class="steps__text">Lihat slot waktu yang kosong, pilih yang paling sesuai, dan konfirmasi booking Anda.</p>
+            <!-- Slide 2 -->
+            <div class="home-carousel__slide"
+              style="background: linear-gradient(oklch(25% 0.02 160 / 0.8), oklch(48% 0.05 160 / 0.6)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop') center/cover;">
+              <div class="home-carousel__overlay">
+                <div class="home-carousel__content">
+                  <h1 class="home-carousel__title">Booking Dokter Tanpa Harus Menunggu Lama</h1>
+                  <p class="home-carousel__desc">Pilih dokter spesialis Anda, tentukan waktu kunjungan, dan pantau
+                    status antrean langsung dari ponsel Anda di mana saja.</p>
+                  <a href="#cari-jadwal" class="btn btn--primary btn--lg"
+                    style="background-color: white; border-color: white; color: var(--color-accent);">Cari Dokter</a>
+                </div>
+              </div>
             </div>
-          </li>
-          <li class="steps__item">
-            <div>
-              <h3 class="steps__title">Pantau antrean dari ponsel Anda</h3>
-              <p class="steps__text">Cek nomor antrean yang sedang dipanggil secara langsung. Tidak perlu lagi menunggu di ruang tunggu.</p>
+            <!-- Slide 3 -->
+            <div class="home-carousel__slide"
+              style="background: linear-gradient(oklch(25% 0.02 160 / 0.8), oklch(48% 0.05 160 / 0.6)), url('https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=2000&auto=format&fit=crop') center/cover;">
+              <div class="home-carousel__overlay">
+                <div class="home-carousel__content">
+                  <h1 class="home-carousel__title">Tim Dokter Spesialis Berpengalaman</h1>
+                  <p class="home-carousel__desc">Kami didukung oleh tenaga medis profesional dan berpengalaman di
+                    bidangnya untuk memberikan diagnosis dan perawatan terbaik.</p>
+                  <a href="/auth/login" class="btn btn--outline btn--lg"
+                    style="color: white; border-color: white;">Masuk ke Akun</a>
+                </div>
+              </div>
             </div>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="section">
-      <div class="container">
-        <p class="section__label">Fitur Utama</p>
-        <h2 class="section__title">Dirancang untuk klinik modern</h2>
-        <p class="section__desc">Setiap fitur menjawab kebutuhan nyata: ketercepatan bagi pasien, keteraturan bagi staf.</p>
-
-        <div class="features">
-          <div class="feature">
-            <div class="feature__icon"><i class="bi bi-calendar-check"></i></div>
-            <h3 class="feature__title">Reservasi Jadwal</h3>
-            <p class="feature__text">Pilih dokter spesialis dan tentukan jadwal kunjungan dari mana saja, kapan saja.</p>
           </div>
-          <div class="feature">
-            <div class="feature__icon"><i class="bi bi-display"></i></div>
-            <h3 class="feature__title">Antrean Real-Time</h3>
-            <p class="feature__text">Cek nomor antrean yang sedang dipanggil langsung dari layar HP Anda.</p>
-          </div>
-          <div class="feature">
-            <div class="feature__icon"><i class="bi bi-clock-history"></i></div>
-            <h3 class="feature__title">Riwayat Terpusat</h3>
-            <p class="feature__text">Akses data kunjungan dan rekam jejak konsultasi Anda sebelumnya.</p>
+
+          <!-- Carousel Indicators -->
+          <div class="home-carousel__indicators" id="carouselIndicators">
+            <button class="home-carousel__dot home-carousel__dot--active" data-slide="0"></button>
+            <button class="home-carousel__dot" data-slide="1"></button>
+            <button class="home-carousel__dot" data-slide="2"></button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta-strip">
+    <!-- Search Schedule Widget Section -->
+    <section class="search-widget-container" id="cari-jadwal">
       <div class="container">
-        <h2 class="cta-strip__title">Siap memulai?</h2>
-        <p class="cta-strip__text">Buat akun sekarang dan kelola jadwal periksa Anda tanpa hambatan.</p>
-        <div class="cta-strip__actions">
-          <a href="/auth/register" class="btn btn--primary btn--lg">Buat Akun</a>
+        <div class="search-widget">
+          <h3 class="search-widget__title">
+            <i class="bi bi-calendar-event-fill"></i> Cari Jadwal Praktik Dokter
+          </h3>
+          <form id="searchForm" class="search-grid">
+            <div class="search-field">
+              <label for="specializationSelect">Pilih Spesialisasi</label>
+              <select id="specializationSelect" class="search-input" required>
+                <option value="" disabled selected>Pilih Spesialisasi</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label for="doctorSelect">Pilih Dokter</label>
+              <select id="doctorSelect" class="search-input" disabled required>
+                <option value="" disabled selected>Pilih Dokter</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label for="datefield">Tanggal Kunjungan</label>
+              <input type="date" id="datefield" class="search-input" required>
+            </div>
+            <div class="search-field">
+              <label style="opacity:0;" aria-hidden="true">Cari</label>
+              <button type="submit" class="search-btn">
+                <i class="bi bi-search"></i> Cari
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specialist Doctor Section -->
+    <section class="home-section">
+      <div class="container">
+        <div class="home-section__header">
+          <h2 class="home-section__title">Pelayanan Dokter Spesialis</h2>
+          <p class="home-section__subtitle">Temukan dokter spesialis terbaik kami yang siap membantu melayani kebutuhan
+            kesehatan Anda dan keluarga.</p>
+        </div>
+
+        <div class="doctor-grid" id="doctorGrid">
+          <!-- Dynamically Injected Doctor Cards -->
+          <div style="grid-column: 1/-1; text-align: center; color: var(--color-muted); padding: var(--space-xl);">
+            <i class="bi bi-arrow-repeat spin"
+              style="font-size: 2rem; display: inline-block; animation: spin 1.5s linear infinite;"></i>
+            <p style="margin-top: 10px;">Memuat data dokter...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Health Articles Section -->
+    <section class="home-section" style="background-color: white;">
+      <div class="container">
+        <div class="home-section__header">
+          <h2 class="home-section__title">Artikel Kesehatan Terkini</h2>
+          <p class="home-section__subtitle">Dapatkan tips kesehatan, informasi penyakit, dan info medis terpercaya
+            langsung dari tim medis kami.</p>
+        </div>
+
+        <div class="article-grid">
+          <!-- Article 1 -->
+          <article class="article-card">
+            <div class="article-card__img">
+              <div class="article-card__icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            </div>
+            <div class="article-card__body">
+              <span class="article-card__tag">Gaya Hidup Sehat</span>
+              <h3 class="article-card__title"><a href="#">Menjaga Kesehatan Jantung di Usia Produktif</a></h3>
+              <p class="article-card__desc">Penyakit jantung tidak lagi memandang usia. Pelajari cara menjaga pola
+                makan, olahraga yang tepat, serta pentingnya tidur yang cukup untuk kesehatan jantung Anda.</p>
+              <div class="article-card__footer">
+                <span>Oleh: dr. Sarah Sp.JP</span>
+                <span>15 Jul 2026</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 2 -->
+          <article class="article-card">
+            <div class="article-card__img">
+              <div class="article-card__icon"><i class="bi bi-shield-plus"></i></div>
+            </div>
+            <div class="article-card__body">
+              <span class="article-card__tag">Kesehatan Anak</span>
+              <h3 class="article-card__title"><a href="#">Pentingnya Imunisasi Dasar pada Balita</a></h3>
+              <p class="article-card__desc">Melindungi tumbuh kembang anak dari berbagai penyakit infeksi berbahaya
+                dengan melengkapi jadwal imunisasi rutin sesuai rekomendasi Ikatan Dokter Anak Indonesia (IDAI).</p>
+              <div class="article-card__footer">
+                <span>Oleh: dr. Budi Sp.A</span>
+                <span>10 Jul 2026</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 3 -->
+          <article class="article-card">
+            <div class="article-card__img">
+              <div class="article-card__icon"><i class="bi bi-journal-medical"></i></div>
+            </div>
+            <div class="article-card__body">
+              <span class="article-card__tag">Info Layanan</span>
+              <h3 class="article-card__title"><a href="#">Panduan Booking Online Menggunakan BPJS</a></h3>
+              <p class="article-card__desc">Kini Klinik Bunda menerima rujukan BPJS Kesehatan. Berikut adalah panduan
+                lengkap cara melakukan pendaftaran antrean online menggunakan nomor kepesertaan BPJS.</p>
+              <div class="article-card__footer">
+                <span>Oleh: Humas Klinik</span>
+                <span>08 Jul 2026</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners-section">
+      <div class="container">
+        <div class="partners-flex">
+          <div class="partner-logo"><i class="bi bi-shield-check"></i> BPJS Kesehatan</div>
+          <div class="partner-logo"><i class="bi bi-building"></i> Mandiri Inhealth</div>
+          <div class="partner-logo"><i class="bi bi-activity"></i> Admedika</div>
+          <div class="partner-logo"><i class="bi bi-award"></i> Prudential</div>
+          <div class="partner-logo"><i class="bi bi-heart-fill"></i> Aliansi Sehat</div>
         </div>
       </div>
     </section>
   </main>
 
-  <div id="footer-placeholder"></div>
+  <!-- Search Results Modal -->
+  <div class="search-results-modal" id="resultsModal">
+    <div class="search-results-content">
+      <div class="search-results-header">
+        <h4 class="search-results-title" id="modalTitle">Hasil Pencarian Jadwal</h4>
+        <button class="search-results-close" id="modalClose">&times;</button>
+      </div>
+      <div class="search-results-body" id="modalBody">
+        <!-- Results will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Footer -->
+  <footer class="home-footer">
+    <div class="container">
+      <div class="home-footer__grid">
+        <div>
+          <div class="home-footer__brand-title">Klinik Bunda</div>
+          <p class="home-footer__brand-desc">Melayani dengan kasih dan profesionalisme untuk menghadirkan layanan
+            kesehatan terpadu, berkualitas tinggi, serta efisien bagi masyarakat luas.</p>
+          <div class="home-footer__socials">
+            <a href="#" class="home-footer__social-btn"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="home-footer__social-btn"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="home-footer__social-btn"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="home-footer__social-btn"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        <div>
+          <div class="home-footer__col-title">Navigasi</div>
+          <ul class="home-footer__list">
+            <li><a href="/">Beranda</a></li>
+            <li><a href="#cari-jadwal">Cari Jadwal</a></li>
+            <li><a href="/auth/login">Masuk</a></li>
+            <li><a href="/auth/register">Daftar Akun</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="home-footer__col-title">Layanan Poliklinik</div>
+          <ul class="home-footer__list">
+            <li><a href="#">Poliklinik Umum</a></li>
+            <li><a href="#">Poliklinik Anak (Pediatri)</a></li>
+            <li><a href="#">Poliklinik Kandungan (Obgyn)</a></li>
+            <li><a href="#">Poliklinik Gigi & Mulut</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="home-footer__col-title">Kontak & Lokasi</div>
+          <div class="home-footer__contact-info">
+            <div class="home-footer__contact-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              <span>Jl. Dipatiukur No. 74B, Bandung, Jawa Barat</span>
+            </div>
+            <div class="home-footer__contact-item">
+              <i class="bi bi-telephone-fill"></i>
+              <span>(022) 2531759</span>
+            </div>
+            <div class="home-footer__contact-item">
+              <i class="bi bi-whatsapp"></i>
+              <span>+62 812-3456-7890 (Chat Only)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-footer__bottom">
+        <div class="home-footer__copy">&copy; 2026 Klinik Bunda. Seluruh hak cipta dilindungi undang-undang.</div>
+        <div class="home-footer__links">
+          <a href="#">Syarat & Ketentuan</a>
+          <a href="#">Kebijakan Privasi</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spin {
+      display: inline-block;
+    }
+  </style>
+
+  <!-- Layout controller & Homepage logic scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="/js/layout.js"></script>
+  <script src="/js/home.js"></script>
 </body>
+
 </html>

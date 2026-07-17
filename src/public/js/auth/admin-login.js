@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
 
         try {
-            // Placeholder endpoint for admin login
+            // API endpoint for admin login
             const res = await window.apiFetch('/api/auth/admin-login', {
                 method: 'POST',
                 body: JSON.stringify({ username, password })

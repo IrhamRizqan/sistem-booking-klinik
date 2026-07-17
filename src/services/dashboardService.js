@@ -60,12 +60,11 @@ const getAdminDashboard = async () => {
 };
 
 const getPatientActiveBooking = async (patientId) => {
-  // Find the most relevant active booking (Skipped might be returned if we need to show them the skipped state, but Completed is definitely ignored as active)
-  // We'll prioritize anything not Completed, ordered by visit date (newest first).
-  const activeBooking = await prisma.booking.findFirst({
+  // 1. Try to find an ongoing active booking first (Confirmed, Calling, On Treatment)
+  let activeBooking = await prisma.booking.findFirst({
     where: {
       patient_id: patientId,
-      status: { notIn: ['Completed'] }
+      status: { in: ['Confirmed', 'Calling', 'On Treatment'] }
     },
     include: {
       schedule: {
@@ -73,62 +72,114 @@ const getPatientActiveBooking = async (patientId) => {
       }
     },
     orderBy: {
-      visit_date: 'asc'
+      visit_date: 'asc' // Oldest active booking first
     }
   });
 
-  if (!activeBooking) return null;
+  // 2. If no ongoing booking, check if the latest past booking was Skipped
+  if (!activeBooking) {
+    const latestPastBooking = await prisma.booking.findFirst({
+      where: {
+        patient_id: patientId,
+        status: { in: ['Completed', 'Skipped', 'Cancelled'] }
+      },
+      include: {
+        schedule: {
+          include: { doctor: { select: { name: true, specialization: true } } }
+        }
+      },
+      orderBy: [
+        { visit_date: 'desc' },
+        { id: 'desc' }
+      ]
+    });
+
+    if (latestPastBooking && latestPastBooking.status === 'Skipped') {
+      activeBooking = latestPastBooking;
+    }
+  }
 
   let currentQueueNumber = null;
   let currentQueueStatus = null;
 
-  // If the patient's booking is Confirmed, Calling, or On Treatment, let's find the current active queue for their exact slot
-  if (['Confirmed', 'Calling', 'On Treatment'].includes(activeBooking.status)) {
-    let activeQueue = await prisma.booking.findFirst({
-      where: {
-        visit_date: activeBooking.visit_date,
-        time_slot: activeBooking.time_slot,
-        schedule_id: activeBooking.schedule_id,
-        status: { in: ['Calling', 'On Treatment'] }
-      },
-      orderBy: {
-        // Prioritize Calling over On Treatment to accurately show what's immediately being called
-        status: 'asc' // C comes before O, so Calling is first
-      },
-      select: {
-        queue_number: true,
-        status: true
-      }
-    });
-
-    // If no one is currently calling or on treatment, show the last completed/skipped queue
-    if (!activeQueue) {
-      activeQueue = await prisma.booking.findFirst({
+  if (activeBooking) {
+    // If the patient's booking is Confirmed, Calling, or On Treatment, let's find the current active queue for their exact slot
+    if (['Confirmed', 'Calling', 'On Treatment'].includes(activeBooking.status)) {
+      let activeQueue = await prisma.booking.findFirst({
         where: {
           visit_date: activeBooking.visit_date,
           time_slot: activeBooking.time_slot,
           schedule_id: activeBooking.schedule_id,
-          status: { in: ['Completed', 'Skipped'] }
+          status: { in: ['Calling', 'On Treatment'] }
         },
         orderBy: {
-          queue_number: 'desc'
+          // Prioritize Calling over On Treatment to accurately show what's immediately being called
+          status: 'asc' // C comes before O, so Calling is first
         },
         select: {
           queue_number: true,
           status: true
         }
       });
-    }
 
-    if (activeQueue) {
-      currentQueueNumber = activeQueue.queue_number;
-      currentQueueStatus = activeQueue.status;
+      // If no one is currently calling or on treatment, show the last completed/skipped queue
+      if (!activeQueue) {
+        activeQueue = await prisma.booking.findFirst({
+          where: {
+            visit_date: activeBooking.visit_date,
+            time_slot: activeBooking.time_slot,
+            schedule_id: activeBooking.schedule_id,
+            status: { in: ['Completed', 'Skipped'] }
+          },
+          orderBy: {
+            queue_number: 'desc'
+          },
+          select: {
+            queue_number: true,
+            status: true
+          }
+        });
+      }
+
+      if (activeQueue) {
+        currentQueueNumber = activeQueue.queue_number;
+        currentQueueStatus = activeQueue.status;
+      }
     }
   }
 
-  // To protect privacy, we strip all non-essential properties
+  // Get Patient Stats
+  const [totalBookings, completedBookings, skippedBookings] = await Promise.all([
+    prisma.booking.count({ where: { patient_id: patientId } }),
+    prisma.booking.count({ where: { patient_id: patientId, status: 'Completed' } }),
+    prisma.booking.count({ where: { patient_id: patientId, status: 'Skipped' } })
+  ]);
+
+  // Get Today's Doctors
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const todayDay = days[new Date().getDay()];
+  const todayDoctors = await prisma.doctor.findMany({
+    where: {
+      schedules: {
+        some: { day: todayDay }
+      }
+    },
+    include: {
+      schedules: {
+        where: { day: todayDay },
+        select: { id: true, start_time: true, end_time: true }
+      }
+    }
+  });
+
+  const patient = await prisma.patient.findUnique({
+    where: { id: patientId },
+    select: { name: true }
+  });
+
   return {
-    booking: {
+    patientName: patient ? patient.name : 'Pasien',
+    booking: activeBooking ? {
       booking_code: activeBooking.booking_code,
       queue_number: activeBooking.queue_number,
       visit_date: activeBooking.visit_date,
@@ -136,9 +187,21 @@ const getPatientActiveBooking = async (patientId) => {
       status: activeBooking.status,
       doctor_name: activeBooking.schedule.doctor.name,
       specialization: activeBooking.schedule.doctor.specialization
-    },
+    } : null,
     current_queue: currentQueueNumber,
-    current_queue_status: currentQueueStatus
+    current_queue_status: currentQueueStatus,
+    stats: {
+      total: totalBookings,
+      completed: completedBookings,
+      skipped: skippedBookings
+    },
+    todayDoctors: todayDoctors.map(doc => ({
+      id: doc.id,
+      name: doc.name,
+      specialization: doc.specialization,
+      schedule_id: doc.schedules[0]?.id || null,
+      time_slot: doc.schedules[0] ? `${doc.schedules[0].start_time} - ${doc.schedules[0].end_time}` : null
+    }))
   };
 };
 

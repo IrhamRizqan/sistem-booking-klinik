@@ -41,17 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Adjust max-width dynamically for Admin vs Patient pages
-        const isAdmin = currentPath.startsWith('/admin');
-        const headerContainer = document.querySelector('header.nav .container');
-        const footerContainer = document.querySelector('footer.footer .container');
-        
-        if (headerContainer) {
-            headerContainer.style.maxWidth = isAdmin ? 'var(--page-max)' : '640px';
-        }
-        if (footerContainer) {
-            footerContainer.style.maxWidth = isAdmin ? 'var(--page-max)' : '640px';
-        }
+
     } catch (e) {
         console.error('Failed to load layouts', e);
     }

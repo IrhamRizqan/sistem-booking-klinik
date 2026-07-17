@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.success) {
-                window.location.href = '/patient/dashboard';
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectUrl = urlParams.get('redirect');
+                window.location.href = redirectUrl ? redirectUrl : '/patient/dashboard';
             } else {
                 window.showAlert(res.message, 'danger');
             }

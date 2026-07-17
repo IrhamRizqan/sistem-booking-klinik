@@ -1,39 +1,40 @@
-<header class="nav" style="border-bottom: var(--rule-hair) solid var(--color-rule); background: var(--color-paper);">
-  <div class="container" style="max-width: 640px; margin-inline: auto; width: 100%;">
+<header class="nav" style="border-bottom: none; background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-accent) 100%);">
+  <div class="container">
     <div class="nav__inner"
-      style="display: flex; align-items: center; justify-content: space-between; height: 56px; gap: var(--space-md);">
+      style="display: flex; align-items: center; justify-content: space-between; height: 80px; gap: var(--space-md);">
       <div style="display: flex; align-items: center; gap: var(--space-lg);">
         <a class="nav__brand" href="/"
-          style="font-size: var(--text-base); font-weight: var(--weight-bold); color: var(--color-ink); letter-spacing: -0.01em;">Klinik
-          Bunda</a>
+          style="font-size: var(--text-xl); font-weight: var(--weight-bold); color: white; letter-spacing: -0.01em; text-decoration: none;">Klinik Bunda</a>
         <ul class="nav__links"
-          style="display: flex; align-items: center; gap: var(--space-md); list-style: none; margin: 0; padding: 0;">
+          style="display: flex; align-items: center; gap: var(--space-lg); list-style: none; margin: 0; padding: 0;">
           <!-- Patient -->
           <li class="role-patient" style="display:none;"><a class="nav__link" href="/booking/new"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Buat Booking</a>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Buat Booking</a>
           </li>
           <li class="role-patient" style="display:none;"><a class="nav__link" href="/patient/dashboard"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Dashboard</a></li>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Dashboard</a></li>
           <li class="role-patient" style="display:none;"><a class="nav__link" href="/patient/history"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Riwayat</a></li>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Riwayat</a></li>
 
           <!-- Admin -->
           <li class="role-admin" style="display:none;"><a class="nav__link" href="/admin/queues"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Antrean</a></li>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Antrean</a></li>
           <li class="role-admin" style="display:none;"><a class="nav__link" href="/admin/schedules"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Jadwal</a></li>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Jadwal</a></li>
           <li class="role-admin" style="display:none;"><a class="nav__link" href="/admin/doctors"
-              style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">Dokter</a></li>
+              style="font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.9); text-decoration: none;">Dokter</a></li>
         </ul>
       </div>
-      <div class="nav__actions" style="display: flex; align-items: center; gap: var(--space-xs);">
-        <a class="role-guest btn btn--outline btn--sm" href="/auth/login"
-          style="padding: 0.35rem 0.75rem; min-height: unset; height: 32px; border-radius: var(--radius-sm); font-size: var(--text-xs);">Masuk</a>
-        <a class="role-guest btn btn--primary btn--sm" href="/auth/register"
-          style="padding: 0.35rem 0.75rem; min-height: unset; height: 32px; border-radius: var(--radius-sm); font-size: var(--text-xs);">Daftar</a>
-        <a class="role-auth btn btn--ghost btn--sm" href="/api/auth/logout"
-          style="display:none; padding: 0.35rem 0.75rem; min-height: unset; height: 32px; border-radius: var(--radius-sm); border: var(--rule-hair) solid var(--color-rule); font-size: var(--text-xs); color: var(--color-muted);">
-          <i class="bi bi-box-arrow-right"></i> Keluar
+      <div class="nav__actions" style="display: flex; align-items: center; gap: var(--space-md);">
+        <a class="role-guest btn btn--outline" href="/auth/login"
+          style="padding: 0.5rem 1rem; border-color: rgba(255,255,255,0.8); color: white; border-radius: var(--radius-sm); font-size: var(--text-sm);">Masuk</a>
+        <a class="role-guest btn btn--primary" href="/auth/register"
+          style="padding: 0.5rem 1rem; background-color: white; border-color: white; color: var(--color-accent); border-radius: var(--radius-sm); font-size: var(--text-sm);">Daftar</a>
+        <a class="role-auth btn btn--ghost" href="/api/auth/logout"
+          style="display:none; padding: 0.5rem 1rem; background-color: var(--color-danger); border: 1px solid var(--color-danger); color: white; border-radius: var(--radius-sm); font-size: var(--text-base);">
+          <span style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;">
+            <i class="bi bi-box-arrow-right"></i> Keluar
+          </span>
         </a>
       </div>
     </div>

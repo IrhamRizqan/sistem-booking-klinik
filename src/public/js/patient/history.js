@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const paginationList = document.getElementById('paginationList');
 
     let currentPage = 1;
+
+    // Initialize Flatpickr for filterDate (dd/mm/yyyy format)
+    const fp = flatpickr("#filterDate", {
+        dateFormat: "Y-m-d", // submitted value
+        altInput: true,      // visible text input
+        altFormat: "d/m/Y",  // display format: dd/mm/yyyy
+    });
     const limit = 10;
 
     const getStatusBadge = (status) => {
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnReset.addEventListener('click', () => {
-        filterDate.value = '';
+        fp.clear();
         filterStatus.value = '';
         currentPage = 1;
         loadHistory();

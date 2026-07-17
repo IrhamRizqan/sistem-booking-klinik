@@ -40,7 +40,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/doctors', requireAdminAuth, doctorRoutes);
 app.use('/api/schedules', requireAdminAuth, scheduleRoutes);
 app.use('/api/bookings', requirePatientAuth, bookingRoutes);
-app.use('/api/booking-options', requirePatientAuth, bookingOptionsRoutes);
+app.use('/api/booking-options', bookingOptionsRoutes);
 app.use('/api/queues', requireAdminAuth, queueRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/archives', requireAdminAuth, archiveRoutes);

@@ -17,7 +17,7 @@ const createBooking = async (patientId, data) => {
 
   const todayStr = new Date().toISOString().split('T')[0];
   const today = new Date(`${todayStr}T00:00:00.000Z`);
-  
+
   const thirtyDaysFromNow = new Date(today);
   thirtyDaysFromNow.setUTCDate(today.getUTCDate() + 30);
 
@@ -29,18 +29,20 @@ const createBooking = async (patientId, data) => {
     throw new Error('Booking is limited to a maximum of 30 days ahead');
   }
 
-  // 2. Check duplicate booking per patient per date
-  const existingPatientBooking = await prisma.booking.findUnique({
+  // 2. Check duplicate booking per patient per date and schedule (excluding Skipped/Cancelled)
+  const existingPatientBooking = await prisma.booking.findFirst({
     where: {
-      patient_id_visit_date: {
-        patient_id: parseInt(patientId),
-        visit_date: visitDateObj
+      patient_id: parseInt(patientId),
+      visit_date: visitDateObj,
+      schedule_id: parseInt(schedule_id),
+      status: {
+        notIn: ['Skipped', 'Cancelled']
       }
     }
   });
 
   if (existingPatientBooking) {
-    throw new Error('You already have a booking for this visit date');
+    throw new Error('You already have a booking for this doctor on this visit date');
   }
 
   // 3. Fetch Schedule to get Quota
@@ -67,6 +69,21 @@ const createBooking = async (patientId, data) => {
     throw new Error('Invalid time slot for this schedule');
   }
 
+  // 2.5. Check if user has an unfinished booking on this date
+  const activeBookingOnDate = await prisma.booking.findFirst({
+    where: {
+      patient_id: parseInt(patientId),
+      visit_date: visitDateObj,
+      status: {
+        notIn: ['Completed', 'Skipped', 'Cancelled']
+      }
+    }
+  });
+
+  if (activeBookingOnDate) {
+    throw new Error('You have an unfinished appointment on this date. Please complete it first before booking another one.');
+  }
+
   // 4. Validate Quota
   const bookingsForSchedule = await prisma.booking.count({
     where: {
@@ -90,7 +107,7 @@ const createBooking = async (patientId, data) => {
   });
 
   const queue_number = bookingsForDoctor + 1;
-  
+
   // 6. Generate Booking Code
   let booking_code;
   let isUnique = false;
@@ -166,7 +183,33 @@ const getHistory = async (patientId, filters, page = 1, limit = 10) => {
   };
 };
 
+const cancelBookingByCode = async (patientId, bookingCode) => {
+  const booking = await prisma.booking.findUnique({
+    where: { booking_code: bookingCode }
+  });
+
+  if (!booking) {
+    throw new Error('Booking not found');
+  }
+
+  if (booking.patient_id !== parseInt(patientId)) {
+    throw new Error('Unauthorized');
+  }
+
+  if (['Completed', 'On Treatment', 'Cancelled', 'Skipped'].includes(booking.status)) {
+    throw new Error(`Cannot cancel booking with status: ${booking.status}`);
+  }
+
+  const updatedBooking = await prisma.booking.update({
+    where: { id: booking.id },
+    data: { status: 'Cancelled' }
+  });
+
+  return updatedBooking;
+};
+
 module.exports = {
   createBooking,
-  getHistory
+  getHistory,
+  cancelBookingByCode
 };

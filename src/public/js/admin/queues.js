@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterSort = document.getElementById('filterSort');
     const queueTableBody = document.getElementById('queueTableBody');
 
+    // Setup Flatpickr for filterDate (dd/mm/yyyy format)
+    flatpickr("#filterDate", {
+        dateFormat: "Y-m-d", // submitted value
+        altInput: true,      // visible text input
+        altFormat: "d/m/Y",  // display format: dd/mm/yyyy
+        defaultDate: new Date() // default to today's date
+    });
+
     const loadDoctors = async () => {
         try {
             const res = await window.apiFetch('/api/doctors?limit=100');

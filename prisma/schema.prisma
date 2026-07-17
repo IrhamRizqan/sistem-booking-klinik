@@ -71,6 +71,7 @@ model Booking {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  @@unique([patient_id, visit_date])
+  @@index([patient_id])
+  @@index([schedule_id])
   @@map("bookings")
 }
