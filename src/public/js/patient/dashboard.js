@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchDashboard = async (isManual = false) => {
         if (isManual) {
             btnRefresh.disabled = true;
-            btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyegarkan...';
+            btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
         }
 
         try {
@@ -78,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 badgeEl.textContent = getStatusIndonesian(data.booking.status);
                 
                 if (data.booking.status === 'Calling') {
-                    badgeEl.className = 'fw-bold mb-0 text-warning';
+                    badgeEl.className = 'badge badge--warning';
                 } else if (data.booking.status === 'On Treatment') {
-                    badgeEl.className = 'fw-bold mb-0 text-info';
+                    badgeEl.className = 'badge badge--success';
                 } else {
-                    badgeEl.className = 'fw-bold mb-0 text-light';
+                    badgeEl.className = 'badge badge--muted';
                 }
 
                 startPolling();
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             if (isManual) {
                 btnRefresh.disabled = false;
-                btnRefresh.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Segarkan Sekarang';
+                btnRefresh.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Segarkan';
             }
         }
     };

@@ -17,12 +17,24 @@ const getAdminDashboard = async () => {
     }
   };
 
-  const totalBookingsToday = await prisma.booking.count(todayBookingsQuery);
-  const waitingToday = await prisma.booking.count({ where: { ...todayBookingsQuery.where, status: 'Confirmed' } });
-  const callingToday = await prisma.booking.count({ where: { ...todayBookingsQuery.where, status: 'Calling' } });
-  const onTreatmentToday = await prisma.booking.count({ where: { ...todayBookingsQuery.where, status: 'On Treatment' } });
-  const completedToday = await prisma.booking.count({ where: { ...todayBookingsQuery.where, status: 'Completed' } });
-  const skippedToday = await prisma.booking.count({ where: { ...todayBookingsQuery.where, status: 'Skipped' } });
+  const statusCounts = await prisma.booking.groupBy({
+    by: ['status'],
+    where: todayBookingsQuery.where,
+    _count: { status: true }
+  });
+
+  let totalBookingsToday = 0, waitingToday = 0, callingToday = 0, onTreatmentToday = 0, completedToday = 0, skippedToday = 0;
+
+  statusCounts.forEach(item => {
+    totalBookingsToday += item._count.status;
+    switch (item.status) {
+      case 'Confirmed': waitingToday = item._count.status; break;
+      case 'Calling': callingToday = item._count.status; break;
+      case 'On Treatment': onTreatmentToday = item._count.status; break;
+      case 'Completed': completedToday = item._count.status; break;
+      case 'Skipped': skippedToday = item._count.status; break;
+    }
+  });
 
   const todayQueue = await prisma.booking.findMany({
     where: todayBookingsQuery.where,

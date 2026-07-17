@@ -1,88 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking History - Sistem Booking Klinik</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Booking — Sistem Booking Klinik</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    
-    <main class="container section-padding">
-        <h2 class="mb-4">Booking History</h2>
-        <div id="alert-container"></div>
-        
-        <!-- Filters -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
-                <form id="filterForm" class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label for="filterDate" class="form-label">Visit Date</label>
-                        <input type="date" class="form-control" id="filterDate">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="filterStatus" class="form-label">Status</label>
-                        <select class="form-select" id="filterStatus">
-                            <option value="">All Statuses</option>
-                            <option value="Confirmed">Menunggu</option>
-                            <option value="Calling">Dipanggil</option>
-                            <option value="On Treatment">Sedang Diperiksa</option>
-                            <option value="Completed">Selesai</option>
-                            <option value="Skipped">Dilewati</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-secondary w-100" id="btnReset">Reset</button>
-                    </div>
-                </form>
-            </div>
+  <div id="header-placeholder"></div>
+
+  <main class="container section">
+    <div class="page-header">
+      <h1 class="page-header__title">Riwayat Booking</h1>
+      <p class="page-header__desc">Lihat semua kunjungan Anda sebelumnya.</p>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <!-- Filters -->
+    <div class="card mb-lg" style="padding:var(--space-lg);">
+      <form id="filterForm" class="flex flex-wrap gap-md items-center">
+        <div class="form-group" style="flex:1;min-width:160px;margin-bottom:0;">
+          <label class="form-label" for="filterDate">Tanggal</label>
+          <input class="form-input" type="date" id="filterDate">
         </div>
-
-        <!-- History Table -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="px-4">Visit Date</th>
-                                <th scope="col">Booking Code</th>
-                                <th scope="col">Doctor</th>
-                                <th scope="col">Specialization</th>
-                                <th scope="col">Time Slot</th>
-                                <th scope="col">Queue #</th>
-                                <th scope="col" class="text-end px-4">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyTableBody">
-                            <tr>
-                                <td colspan="7" class="text-center py-4">Loading history...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="form-group" style="flex:1;min-width:160px;margin-bottom:0;">
+          <label class="form-label" for="filterStatus">Status</label>
+          <select class="form-select" id="filterStatus">
+            <option value="">Semua Status</option>
+            <option value="Confirmed">Menunggu</option>
+            <option value="Calling">Dipanggil</option>
+            <option value="On Treatment">Diperiksa</option>
+            <option value="Completed">Selesai</option>
+            <option value="Skipped">Dilewati</option>
+          </select>
         </div>
+        <button type="submit" class="btn btn--primary" style="align-self:flex-end;">Filter</button>
+        <button type="button" class="btn btn--ghost" id="btnReset" style="align-self:flex-end;">Reset</button>
+      </form>
+    </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" id="paginationNav" style="display: none;">
-            <ul class="pagination justify-content-center" id="paginationList">
-                <!-- Dynamic pages -->
-            </ul>
-        </nav>
-        
-    </main>
+    <!-- History Table -->
+    <div class="card card--elevated">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Kode</th>
+              <th>Dokter</th>
+              <th>Spesialisasi</th>
+              <th>Jam</th>
+              <th>No. Antrean</th>
+              <th style="text-align:right;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr><td colspan="7" style="text-align:center;padding:var(--space-xl);color:var(--color-muted);">Memuat riwayat...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    <div id="footer-placeholder"></div>
+    <!-- Pagination -->
+    <nav id="paginationNav" style="display:none;margin-top:var(--space-lg);text-align:center;">
+      <ul id="paginationList" class="flex gap-xs justify-center" style="list-style:none;"></ul>
+    </nav>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/layout.js"></script>
-    <script src="/js/patient/history.js"></script>
+  <div id="footer-placeholder"></div>
+  <script src="/js/layout.js"></script>
+  <script src="/js/patient/history.js"></script>
 </body>
 </html>

@@ -1,57 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Doctor - Sistem Booking Klinik</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tambah Dokter — Sistem Booking Klinik</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <main class="container">
-        <div class="row mb-4 align-items-center mt-4">
-            <div class="col-md-6">
-                <h2 class="fw-bold text-primary mb-0">Add New Doctor</h2>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="/admin/doctors/index" class="btn btn-outline-secondary fw-bold">
-                    <i class="bi bi-arrow-left me-1"></i> Back to List
-                </a>
-            </div>
-        </div>
+  <div id="header-placeholder"></div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-5">
-                        <div id="alert-container"></div>
-                        <form id="createForm">
-                            <div class="mb-4">
-                                <label for="name" class="form-label text-muted fw-semibold">Doctor's Full Name</label>
-                                <input type="text" class="form-control form-control-lg" id="name" placeholder="e.g. Dr. John Doe" required>
-                            </div>
-                            
-                            <div class="mb-5">
-                                <label for="specialization" class="form-label text-muted fw-semibold">Specialization</label>
-                                <input type="text" class="form-control form-control-lg" id="specialization" placeholder="e.g. Cardiologist" required>
-                                <div class="form-text">Enter the area of expertise (e.g. Dentist, General Practitioner)</div>
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg fw-bold">Save Doctor</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    <div id="footer-placeholder"></div>
+  <main class="admin-layout">
+    <aside class="admin-sidebar">
+      <a class="admin-sidebar__link" href="/admin/dashboard">Dashboard</a>
+      <a class="admin-sidebar__link" href="/admin/queues">Antrean</a>
+      <a class="admin-sidebar__link" href="/admin/schedules">Jadwal</a>
+      <a class="admin-sidebar__link admin-sidebar__link--active" href="/admin/doctors">Dokter</a>
+      <a class="admin-sidebar__link" href="/admin/archive">Arsip</a>
+    </aside>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/layout.js"></script>
-    <script src="/js/admin/doctors/create.js"></script>
+    <div class="admin-main">
+      <div class="page-header flex justify-between items-center">
+        <div>
+          <h1 class="page-header__title">Tambah Dokter</h1>
+          <p class="page-header__desc">Daftarkan dokter baru ke sistem.</p>
+        </div>
+        <a href="/admin/doctors" class="btn btn--ghost btn--sm">&larr; Kembali</a>
+      </div>
+
+      <div class="card card--elevated" style="max-width:520px;">
+        <div style="padding:var(--space-2xl);">
+          <div id="alert-container"></div>
+          <form id="createForm">
+            <div class="form-group">
+              <label class="form-label" for="name">Nama Lengkap</label>
+              <input class="form-input" type="text" id="name" placeholder="Dr. Nama Dokter" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="specialization">Spesialisasi</label>
+              <input class="form-input" type="text" id="specialization" placeholder="contoh: Kardiologi" required>
+              <p class="form-hint">Masukkan bidang keahlian (contoh: Dokter Umum, Gigi).</p>
+            </div>
+            <button type="submit" class="btn btn--primary btn--lg" style="width:100%;">Simpan Dokter</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/layout.js"></script>
+  <script src="/js/admin/doctors/create.js"></script>
 </body>
 </html>

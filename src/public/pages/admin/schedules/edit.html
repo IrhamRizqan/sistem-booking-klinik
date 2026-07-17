@@ -1,85 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Schedule - Sistem Booking Klinik</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Jadwal — Sistem Booking Klinik</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <main class="container">
-        <div class="row mb-4 align-items-center mt-4">
-            <div class="col-md-6">
-                <h2 class="fw-bold text-primary mb-0">Edit Schedule</h2>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="/admin/schedules/index" class="btn btn-outline-secondary fw-bold">
-                    <i class="bi bi-arrow-left me-1"></i> Back to List
-                </a>
-            </div>
+  <div id="header-placeholder"></div>
+
+  <main class="admin-layout">
+    <aside class="admin-sidebar">
+      <a class="admin-sidebar__link" href="/admin/dashboard">Dashboard</a>
+      <a class="admin-sidebar__link" href="/admin/queues">Antrean</a>
+      <a class="admin-sidebar__link admin-sidebar__link--active" href="/admin/schedules">Jadwal</a>
+      <a class="admin-sidebar__link" href="/admin/doctors">Dokter</a>
+      <a class="admin-sidebar__link" href="/admin/archive">Arsip</a>
+    </aside>
+
+    <div class="admin-main">
+      <div class="page-header flex justify-between items-center">
+        <div>
+          <h1 class="page-header__title">Edit Jadwal</h1>
+          <p class="page-header__desc">Perbarui jadwal dokter.</p>
         </div>
+        <a href="/admin/schedules" class="btn btn--ghost btn--sm">&larr; Kembali</a>
+      </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-5">
-                        <div id="alert-container"></div>
-                        <form id="editForm">
-                            <div class="mb-4">
-                                <label for="doctor_id" class="form-label text-muted fw-semibold">Select Doctor</label>
-                                <select class="form-select form-control-lg" id="doctor_id" required>
-                                    <option value="">Loading doctors...</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="day" class="form-label text-muted fw-semibold">Day of Week</label>
-                                <select class="form-select form-control-lg" id="day" required>
-                                    <option value="">Select Day</option>
-                                    <option value="Monday">Monday</option>
-                                    <option value="Tuesday">Tuesday</option>
-                                    <option value="Wednesday">Wednesday</option>
-                                    <option value="Thursday">Thursday</option>
-                                    <option value="Friday">Friday</option>
-                                    <option value="Saturday">Saturday</option>
-                                    <option value="Sunday">Sunday</option>
-                                </select>
-                            </div>
-                            
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label for="start_time" class="form-label text-muted fw-semibold">Start Time</label>
-                                    <input type="time" class="form-control form-control-lg" id="start_time" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="end_time" class="form-label text-muted fw-semibold">End Time</label>
-                                    <input type="time" class="form-control form-control-lg" id="end_time" required>
-                                    <div class="form-text">Must be greater than Start Time</div>
-                                </div>
-                            </div>
-
-                            <div class="mb-5">
-                                <label for="quota" class="form-label text-muted fw-semibold">Quota per Slot</label>
-                                <input type="number" class="form-control form-control-lg" id="quota" min="1" required>
-                                <div class="form-text">Minimum 1 patient per generated slot.</div>
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg fw-bold">Update Schedule</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+      <div class="card card--elevated" style="max-width:520px;">
+        <div style="padding:var(--space-2xl);">
+          <div id="alert-container"></div>
+          <form id="editForm">
+            <div class="form-group">
+              <label class="form-label" for="doctor_id">Dokter</label>
+              <select class="form-select" id="doctor_id" required>
+                <option value="">Memuat dokter...</option>
+              </select>
             </div>
+            <div class="form-group">
+              <label class="form-label" for="day">Hari</label>
+              <select class="form-select" id="day" required>
+                <option value="">Pilih Hari</option>
+                <option value="Monday">Senin</option>
+                <option value="Tuesday">Selasa</option>
+                <option value="Wednesday">Rabu</option>
+                <option value="Thursday">Kamis</option>
+                <option value="Friday">Jumat</option>
+                <option value="Saturday">Sabtu</option>
+                <option value="Sunday">Minggu</option>
+              </select>
+            </div>
+            <div class="flex gap-md">
+              <div class="form-group" style="flex:1;">
+                <label class="form-label" for="start_time">Jam Mulai</label>
+                <input class="form-input" type="time" id="start_time" required>
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label class="form-label" for="end_time">Jam Selesai</label>
+                <input class="form-input" type="time" id="end_time" required>
+                <p class="form-hint">Harus lebih besar dari jam mulai.</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="quota">Kuota per Slot</label>
+              <input class="form-input" type="number" id="quota" min="1" required>
+              <p class="form-hint">Minimal 1 pasien per slot.</p>
+            </div>
+            <button type="submit" class="btn btn--primary btn--lg" style="width:100%;">Perbarui Jadwal</button>
+          </form>
         </div>
-    </main>
-    <div id="footer-placeholder"></div>
+      </div>
+    </div>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/layout.js"></script>
-    <script src="/js/admin/schedules/edit.js"></script>
+  <div id="footer-placeholder"></div>
+  <script src="/js/layout.js"></script>
+  <script src="/js/admin/schedules/edit.js"></script>
 </body>
 </html>

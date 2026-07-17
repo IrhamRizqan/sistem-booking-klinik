@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const getQueues = async (filters) => {
+const getQueues = async (filters, sort = 'desc') => {
   const where = {};
   
   if (filters.visit_date) {
@@ -17,6 +17,15 @@ const getQueues = async (filters) => {
     where.time_slot = filters.time_slot;
   }
 
+  const orderBy = [];
+  if (sort === 'asc') {
+    orderBy.push({ visit_date: 'asc' });
+    orderBy.push({ queue_number: 'asc' });
+  } else {
+    orderBy.push({ visit_date: 'desc' });
+    orderBy.push({ queue_number: 'desc' });
+  }
+
   return await prisma.booking.findMany({
     where,
     include: {
@@ -29,7 +38,7 @@ const getQueues = async (filters) => {
         }
       }
     },
-    orderBy: { queue_number: 'asc' }
+    orderBy
   });
 };
 
@@ -81,7 +90,7 @@ const updateQueueStatus = async (bookingId, newStatus) => {
   }
 
   // Update status
-  return await prisma.booking.update({
+  const updatedBooking = await prisma.booking.update({
     where: { id: booking.id },
     data: { status: newStatus },
     include: {
@@ -89,6 +98,26 @@ const updateQueueStatus = async (bookingId, newStatus) => {
       schedule: { include: { doctor: { select: { name: true } } } }
     }
   });
+
+  if (newStatus === 'Calling') {
+    // Auto-skip after 3 minutes if patient hasn't arrived
+    setTimeout(async () => {
+      try {
+        const currentBooking = await prisma.booking.findUnique({ where: { id: booking.id } });
+        if (currentBooking && currentBooking.status === 'Calling') {
+          await prisma.booking.update({
+             where: { id: booking.id },
+             data: { status: 'Skipped' }
+          });
+          console.log(`Booking ID ${booking.id} automatically skipped after 3 minutes.`);
+        }
+      } catch (err) {
+        console.error('Failed to auto-skip booking:', err);
+      }
+    }, 3 * 60 * 1000); // 3 minutes
+  }
+
+  return updatedBooking;
 };
 
 module.exports = {

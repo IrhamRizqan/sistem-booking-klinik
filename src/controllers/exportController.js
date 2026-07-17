@@ -39,7 +39,7 @@ const exportCsv = async (req, res) => {
         const data = await archiveService.getExportData(filters);
 
         const escapeCsv = (str) => {
-            if (str == null) return '';
+            if (str === null || str === undefined) return '';
             const s = String(str);
             if (s.includes(',') || s.includes('"') || s.includes('\n')) {
                 return `"${s.replace(/"/g, '""')}"`;

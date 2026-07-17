@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load Header
+    // Load Header & Footer concurrently
     try {
-        const headerRes = await fetch('/pages/partials/header.html');
-        const headerHtml = await headerRes.text();
-        document.getElementById('header-placeholder').innerHTML = headerHtml;
+        const [headerText, footerText] = await Promise.all([
+            fetch('/pages/partials/header.html').then(res => res.text()),
+            fetch('/pages/partials/footer.html').then(res => res.text())
+        ]);
+        
+        document.getElementById('header-placeholder').innerHTML = headerText;
+        document.getElementById('footer-placeholder').innerHTML = footerText;
 
         // Check authentication state
         const authRes = await fetch('/api/auth/me');
@@ -25,17 +29,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             guestElements.forEach(el => el.style.display = 'block');
         }
-    } catch (e) {
-        console.error('Failed to load header', e);
-    }
 
-    // Load Footer
-    try {
-        const footerRes = await fetch('/pages/partials/footer.html');
-        const footerHtml = await footerRes.text();
-        document.getElementById('footer-placeholder').innerHTML = footerHtml;
+        // Highlight active link
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('.nav__link');
+        links.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('nav__link--active');
+            } else {
+                link.classList.remove('nav__link--active');
+            }
+        });
+
+        // Adjust max-width dynamically for Admin vs Patient pages
+        const isAdmin = currentPath.startsWith('/admin');
+        const headerContainer = document.querySelector('header.nav .container');
+        const footerContainer = document.querySelector('footer.footer .container');
+        
+        if (headerContainer) {
+            headerContainer.style.maxWidth = isAdmin ? 'var(--page-max)' : '640px';
+        }
+        if (footerContainer) {
+            footerContainer.style.maxWidth = isAdmin ? 'var(--page-max)' : '640px';
+        }
     } catch (e) {
-        console.error('Failed to load footer', e);
+        console.error('Failed to load layouts', e);
     }
 });
 

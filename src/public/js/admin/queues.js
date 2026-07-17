@@ -2,10 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterForm = document.getElementById('filterForm');
     const filterDate = document.getElementById('filterDate');
     const filterDoctor = document.getElementById('filterDoctor');
+    const filterSort = document.getElementById('filterSort');
     const queueTableBody = document.getElementById('queueTableBody');
-
-    // Default to today
-    filterDate.value = new Date().toISOString().split('T')[0];
 
     const loadDoctors = async () => {
         try {
@@ -27,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = new URLSearchParams();
         if (filterDate.value) query.append('date', filterDate.value);
         if (filterDoctor.value) query.append('doctor_id', filterDoctor.value);
+        if (filterSort && filterSort.value) query.append('sort', filterSort.value);
 
         queueTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading queues...</td></tr>';
 
@@ -46,12 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'Confirmed': return '<span class="badge bg-secondary">Menunggu</span>';
-            case 'Calling': return '<span class="badge bg-warning text-dark">Dipanggil</span>';
-            case 'On Treatment': return '<span class="badge bg-primary">Sedang Diperiksa</span>';
-            case 'Completed': return '<span class="badge bg-success">Selesai</span>';
-            case 'Skipped': return '<span class="badge bg-danger">Dilewati</span>';
-            default: return `<span class="badge bg-light text-dark">${status}</span>`;
+            case 'Confirmed': return '<span class="badge badge--muted">Menunggu</span>';
+            case 'Calling': return '<span class="badge badge--warning">Dipanggil</span>';
+            case 'On Treatment': return '<span class="badge badge--success">Sedang Diperiksa</span>';
+            case 'Completed': return '<span class="badge badge--success">Selesai</span>';
+            case 'Skipped': return '<span class="badge badge--danger">Dilewati</span>';
+            default: return `<span class="badge badge--muted">${status}</span>`;
         }
     };
 
@@ -59,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = queue.id;
         switch (queue.status) {
             case 'Confirmed':
-                return `<button class="btn btn-sm btn-primary action-btn" data-id="${id}" data-status="Calling">Panggil</button>`;
+                return `<button class="btn btn--primary btn--sm action-btn" data-id="${id}" data-status="Calling">Panggil</button>`;
             case 'Calling':
                 return `
-                    <button class="btn btn-sm btn-success action-btn mb-1" data-id="${id}" data-status="On Treatment">Mulai Pemeriksaan</button>
-                    <button class="btn btn-sm btn-outline-danger action-btn" data-id="${id}" data-status="Skipped">Lewati</button>
+                    <button class="btn btn--primary btn--sm action-btn mb-1" data-id="${id}" data-status="On Treatment">Mulai Pemeriksaan</button>
+                    <button class="btn btn--danger btn--sm action-btn" data-id="${id}" data-status="Skipped">Lewati</button>
                 `;
             case 'On Treatment':
-                return `<button class="btn btn-sm btn-success action-btn" data-id="${id}" data-status="Completed">Selesai</button>`;
+                return `<button class="btn btn--primary btn--sm action-btn" data-id="${id}" data-status="Completed">Selesai</button>`;
             case 'Completed':
             case 'Skipped':
                 return '<span class="text-muted small">No action</span>';
