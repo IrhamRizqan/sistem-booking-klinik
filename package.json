@@ -19,7 +19,8 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "pdfkit": "^0.19.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",

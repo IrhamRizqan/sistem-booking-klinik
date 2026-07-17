@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const getArchive = async (filters, page = 1, limit = 10) => {
+const buildWhereClause = (filters) => {
   const where = {};
   
   if (filters.date) {
@@ -17,7 +17,6 @@ const getArchive = async (filters, page = 1, limit = 10) => {
     where.time_slot = filters.time_slot;
   }
 
-  // Nested filters
   if (filters.doctor_id || filters.specialization) {
     where.schedule = { doctor: {} };
     if (filters.doctor_id) {
@@ -34,7 +33,12 @@ const getArchive = async (filters, page = 1, limit = 10) => {
       { patient: { name: { contains: filters.search } } }
     ];
   }
+  
+  return where;
+};
 
+const getArchive = async (filters, page = 1, limit = 10) => {
+  const where = buildWhereClause(filters);
   const offset = (page - 1) * limit;
 
   const [data, total] = await Promise.all([
@@ -70,6 +74,28 @@ const getArchive = async (filters, page = 1, limit = 10) => {
   };
 };
 
+const getExportData = async (filters) => {
+  const where = buildWhereClause(filters);
+  
+  const data = await prisma.booking.findMany({
+    where,
+    include: {
+      patient: { select: { name: true, phone: true } },
+      schedule: {
+        include: { doctor: { select: { name: true, specialization: true } } }
+      }
+    },
+    orderBy: [
+      { visit_date: 'desc' },
+      { time_slot: 'asc' },
+      { queue_number: 'asc' }
+    ]
+  });
+
+  return data;
+};
+
 module.exports = {
-  getArchive
+  getArchive,
+  getExportData
 };

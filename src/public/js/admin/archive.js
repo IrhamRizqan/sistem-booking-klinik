@@ -135,6 +135,26 @@ document.addEventListener('DOMContentLoaded', () => {
         loadArchive();
     });
 
+    const btnExportCsv = document.getElementById('btnExportCsv');
+    const btnExportPdf = document.getElementById('btnExportPdf');
+
+    const getExportQueryString = () => {
+        const query = new URLSearchParams();
+        if (filterSearch.value) query.append('search', filterSearch.value);
+        if (filterDate.value) query.append('date', filterDate.value);
+        if (filterDoctor.value) query.append('doctor_id', filterDoctor.value);
+        if (filterStatus.value) query.append('status', filterStatus.value);
+        return query.toString();
+    };
+
+    btnExportCsv.addEventListener('click', () => {
+        window.location.href = `/api/archives/export/csv?${getExportQueryString()}`;
+    });
+
+    btnExportPdf.addEventListener('click', () => {
+        window.location.href = `/api/archives/export/pdf?${getExportQueryString()}`;
+    });
+
     // Init
     loadDoctors().then(loadArchive);
 });
