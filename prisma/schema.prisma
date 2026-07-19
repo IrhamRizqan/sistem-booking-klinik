@@ -22,7 +22,7 @@ model Patient {
   username   String    @unique
   password   String
   name       String
-  phone      String?
+  phone      String
   bookings   Booking[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt

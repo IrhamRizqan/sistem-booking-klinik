@@ -10,7 +10,7 @@ const getQueues = async (filters, sort = 'desc') => {
   }
 
   if (filters.doctor_id) {
-    where.schedule = { doctor_id: parseInt(filters.doctor_id) };
+    where.schedule = { doctor_id: parseInt(filters.doctor_id, 10) };
   }
 
   if (filters.time_slot) {
@@ -44,7 +44,7 @@ const getQueues = async (filters, sort = 'desc') => {
 
 const updateQueueStatus = async (bookingId, newStatus) => {
   const booking = await prisma.booking.findUnique({
-    where: { id: parseInt(bookingId) },
+    where: { id: parseInt(bookingId, 10) },
     include: { schedule: true }
   });
 

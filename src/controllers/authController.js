@@ -35,8 +35,8 @@ const postAdminLogin = async (req, res) => {
 const postRegister = async (req, res) => {
   const { name, phone, username, password, confirmPassword } = req.body;
 
-  if (!name || !username || !password || !confirmPassword) {
-    return res.status(400).json({ success: false, message: 'All fields except phone are required' });
+  if (!name || !phone || !username || !password || !confirmPassword) {
+    return res.status(400).json({ success: false, message: 'All fields are required' });
   }
 
   if (password !== confirmPassword) {
